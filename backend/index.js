@@ -81,8 +81,20 @@ app.use("/api/v1/interview", interviewRoute);
 app.use(express.static(path.join(projectRoot, "frontend/dist")));
 
 // Catch-all route for client-side routing (SPA)
-app.use((_, res) => {
-  res.sendFile(path.resolve(projectRoot, "frontend/dist/index.html"));
+// Only serve index.html for routes without file extensions
+app.use((req, res) => {
+  // If the request path has a file extension, it's not a route - return 404
+  if (req.path.includes(".")) {
+    return res.status(404).send("Not found");
+  }
+  // Otherwise, serve index.html for SPA routing
+  const indexPath = path.resolve(projectRoot, "frontend/dist/index.html");
+  res.sendFile(indexPath, (err) => {
+    if (err) {
+      console.error("Error serving index.html:", err);
+      res.status(500).send("Server error");
+    }
+  });
 });
 
 // Connect to DB first, then start server
