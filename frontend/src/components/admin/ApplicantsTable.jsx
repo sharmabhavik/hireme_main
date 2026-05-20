@@ -45,7 +45,7 @@ const ApplicantsTable = () => {
   };
 
   return (
-    <div>
+    <div className="hire-table-scroll hire-table-scroll-wide">
       <Table>
         <TableCaption>A list of your recent applied user</TableCaption>
         <TableHeader>

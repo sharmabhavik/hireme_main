@@ -4,6 +4,8 @@ import Navbar from "./shared/Navbar";
 import Footer from "./shared/Footer";
 import { Button } from "./ui/button";
 import { INTERVIEW_API_END_POINT } from "../utils/constant";
+import InterviewQuestionCard from "./InterviewQuestionCard";
+import { Download } from "lucide-react";
 import {
   Bar,
   BarChart,
@@ -45,6 +47,11 @@ export default function InterviewAnalysisDashboard() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [data, setData] = useState(null);
+
+  const pdfUrl = useMemo(() => {
+    if (!id) return "";
+    return `${INTERVIEW_API_END_POINT}/${id}/pdf`;
+  }, [id]);
 
   useEffect(() => {
     if (!id) return;
@@ -97,6 +104,7 @@ export default function InterviewAnalysisDashboard() {
     const arr = Array.isArray(data?.perQuestion) ? data.perQuestion : [];
     return arr.map((q) => ({
       index: q.index,
+      question: q.question,
       score: typeof q.score === "number" ? q.score : null,
       bucket: q.bucket,
     }));
@@ -116,20 +124,35 @@ export default function InterviewAnalysisDashboard() {
   return (
     <div className="hire-page">
       <Navbar />
-      <div className="hire-page-content mx-auto max-w-6xl space-y-4">
-        <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:flex-wrap">
+      <div className="hire-page-content hire-page-content-medium space-y-4 sm:space-y-6">
+        <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:flex-wrap">
           <div>
             <h1 className="hire-title text-2xl sm:text-3xl">
-              Interview Analysis Dashboard
+              Mock Interview Results
             </h1>
-            <div className="text-sm text-muted-foreground">
-              {session.targetRole ? `${session.targetRole} · ` : ""}
-              {session.round ? `${String(session.round).toUpperCase()} · ` : ""}
-              {session.difficulty ? `${session.difficulty}` : ""}
+            <div className="mt-1 text-sm text-muted-foreground">
+              {session.targetRole ? `${session.targetRole}` : ""}
+              {session.round ? ` · ${String(session.round).toUpperCase()}` : ""}
+              {session.difficulty ? ` · ${session.difficulty}` : ""}
             </div>
+            {session.endedEarly ? (
+              <p className="mt-2 text-xs text-amber-700 dark:text-amber-300">
+                Interview ended early — report includes answered questions only.
+              </p>
+            ) : null}
           </div>
-          <div className="flex gap-2">
-            <Button variant="secondary" onClick={() => navigate("/practice")}>
+          <div className="hire-toolbar-actions w-full sm:w-auto">
+            <Button asChild className="w-full sm:w-auto gap-2">
+              <a href={pdfUrl} target="_blank" rel="noreferrer" download>
+                <Download className="size-4" />
+                Download report (PDF)
+              </a>
+            </Button>
+            <Button
+              variant="secondary"
+              className="w-full sm:w-auto"
+              onClick={() => navigate("/practice")}
+            >
               Start New Interview
             </Button>
           </div>
@@ -142,13 +165,13 @@ export default function InterviewAnalysisDashboard() {
 
         {data ? (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+            <div className="hire-grid-stats-4">
               <div className="hire-card p-4">
                 <div className="text-xs text-muted-foreground">
-                  Total Questions
+                  Questions Answered
                 </div>
                 <div className="text-2xl font-semibold">
-                  {safeNum(summary.totalQuestions)}
+                  {safeNum(summary.answeredQuestions ?? summary.totalQuestions)}
                 </div>
               </div>
               <div className="hire-card p-4">
@@ -179,7 +202,37 @@ export default function InterviewAnalysisDashboard() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+            {perQuestion.length > 0 ? (
+              <div className="space-y-4">
+                <h2 className="text-lg font-semibold text-foreground">
+                  Questions &amp; scores
+                </h2>
+                <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+                  {perQuestion.map((q) => (
+                    <div key={q.index} className="space-y-2">
+                      <InterviewQuestionCard
+                        question={q.question}
+                        questionNumber={q.index}
+                        round={session.round}
+                        difficulty={session.difficulty}
+                      />
+                      {typeof q.score === "number" ? (
+                        <p className="text-sm text-muted-foreground pl-1">
+                          Score:{" "}
+                          <span className="font-semibold text-foreground">
+                            {q.score}/10
+                          </span>
+                          {" · "}
+                          {BUCKET_LABELS[q.bucket] || q.bucket}
+                        </p>
+                      ) : null}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+
+            <div className="hire-grid-charts">
               <div className="hire-card p-4">
                 <div className="font-medium">Performance Distribution</div>
                 <div className="text-xs text-muted-foreground">
@@ -293,11 +346,20 @@ export default function InterviewAnalysisDashboard() {
             {session.overallFeedback ? (
               <div className="hire-card p-4">
                 <div className="font-medium">Overall Feedback</div>
-                <div className="text-sm whitespace-pre-wrap mt-2">
+                <div className="text-sm whitespace-pre-wrap mt-2 text-muted-foreground">
                   {session.overallFeedback}
                 </div>
               </div>
             ) : null}
+
+            <div className="flex justify-center pt-2">
+              <Button asChild size="lg" className="gap-2 w-full sm:w-auto">
+                <a href={pdfUrl} target="_blank" rel="noreferrer" download>
+                  <Download className="size-4" />
+                  Download full report (PDF)
+                </a>
+              </Button>
+            </div>
           </>
         ) : null}
       </div>

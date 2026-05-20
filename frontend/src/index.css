@@ -155,7 +155,97 @@
   }
 
   .hire-page-content {
-    @apply mx-auto w-full max-w-7xl flex-1 px-4 py-6 sm:px-6 sm:py-8 lg:py-10;
+    @apply mx-auto w-full max-w-7xl flex-1 px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10 xl:py-12 2xl:max-w-[88rem] 2xl:px-10;
+  }
+
+  .hire-page-content-narrow {
+    @apply max-w-4xl 2xl:max-w-5xl;
+  }
+
+  .hire-page-content-medium {
+    @apply max-w-6xl 2xl:max-w-7xl;
+  }
+
+  .hire-page-content-compact {
+    @apply max-w-3xl 2xl:max-w-4xl;
+  }
+
+  .hire-page-content-form {
+    @apply max-w-xl 2xl:max-w-2xl;
+  }
+
+  .hire-section {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 2xl:max-w-[88rem] 2xl:px-10;
+  }
+
+  .hire-page-header {
+    @apply mb-6 space-y-2 sm:mb-8 md:mb-10;
+  }
+
+  .hire-toolbar {
+    @apply flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-4;
+  }
+
+  .hire-toolbar-actions {
+    @apply flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center sm:gap-3;
+  }
+
+  .hire-grid-stats {
+    @apply grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5;
+  }
+
+  .hire-grid-stats-2 {
+    @apply grid grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-5;
+  }
+
+  .hire-grid-stats-4 {
+    @apply grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5;
+  }
+
+  .hire-grid-charts {
+    @apply grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-6;
+  }
+
+  .hire-grid-jobs {
+    @apply grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2 xl:grid-cols-3 2xl:gap-6;
+  }
+
+  .hire-layout-sidebar {
+    @apply flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-8 xl:gap-10;
+  }
+
+  .hire-sidebar {
+    @apply w-full shrink-0 lg:sticky lg:top-[4.5rem] lg:w-72 xl:w-80;
+  }
+
+  .hire-main-col {
+    @apply min-w-0 flex-1 w-full;
+  }
+
+  .hire-table-scroll {
+    @apply -mx-4 w-[calc(100%+2rem)] overflow-x-auto px-4 sm:mx-0 sm:w-full sm:px-0;
+  }
+
+  .hire-table-scroll [data-slot="table-container"],
+  .hire-table-scroll table {
+    @apply min-w-[36rem] w-full;
+  }
+
+  .hire-table-scroll-wide [data-slot="table-container"],
+  .hire-table-scroll-wide table {
+    @apply min-w-[52rem] w-full;
+  }
+
+  .hire-form-grid {
+    @apply grid grid-cols-1 gap-4 sm:grid-cols-2;
+  }
+
+  .hire-stack-sm {
+    @apply flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3;
+  }
+
+  .hire-hero-inner {
+    @apply mx-auto flex w-full max-w-3xl flex-col gap-5 text-center sm:max-w-4xl sm:gap-6 lg:max-w-5xl;
   }
 
   .hire-card {
@@ -171,7 +261,7 @@
   }
 
   .hire-title-lg {
-    @apply text-3xl font-bold tracking-tight text-foreground;
+    @apply text-2xl font-bold tracking-tight text-foreground sm:text-3xl lg:text-4xl;
   }
 
   .hire-subtitle {
@@ -267,15 +357,15 @@
     linear-gradient(to bottom, oklch(0.08 0 0), oklch(0.1 0 0));
 }
 
-/* Jobs list scroll area — responsive height */
+/* Jobs list scroll area — desktop only */
 .hire-jobs-scroll {
-  @apply flex-1 pb-6 md:pb-8;
-  max-height: none;
+  @apply min-w-0 w-full flex-1 pb-6 lg:pb-8;
 }
 
 @media (min-width: 1024px) {
   .hire-jobs-scroll {
-    max-height: 88vh;
+    max-height: calc(100vh - 12rem);
     overflow-y: auto;
+    overscroll-behavior: contain;
   }
 }

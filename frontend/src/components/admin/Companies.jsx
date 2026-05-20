@@ -21,20 +21,22 @@ const Companies = () => {
     return (
         <div className="hire-page">
             <Navbar />
-            <div className='mx-auto max-w-6xl px-4 py-10 sm:px-6'>
-                <div className="mb-8">
-                    <h1 className="text-3xl font-bold tracking-tight text-foreground">Your companies</h1>
-                    <p className="mt-2 text-muted-foreground">Manage profiles that appear on job listings.</p>
-                </div>
-                <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
+            <div className="hire-page-content hire-page-content-medium">
+                <header className="hire-page-header">
+                    <h1 className="hire-title-lg">Your companies</h1>
+                    <p className="hire-subtitle">Manage profiles that appear on job listings.</p>
+                </header>
+                <div className="hire-toolbar">
                     <Input
-                        className="max-w-xs border-border"
+                        className="w-full max-w-full sm:max-w-xs md:max-w-sm"
                         placeholder="Filter by name"
                         onChange={(e) => setInput(e.target.value)}
                     />
-                    <Button onClick={() => navigate("/admin/companies/create")}>Add company</Button>
+                    <div className="hire-toolbar-actions">
+                        <Button onClick={() => navigate("/admin/companies/create")} className="w-full sm:w-auto">Add company</Button>
+                    </div>
                 </div>
-                <div className="mt-8">
+                <div className="mt-6 sm:mt-8">
                     <CompaniesTable/>
                 </div>
             </div>
@@ -44,4 +46,3 @@ const Companies = () => {
 }
 
 export default Companies
-

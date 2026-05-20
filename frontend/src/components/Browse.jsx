@@ -43,12 +43,12 @@ const Browse = () => {
     <div className="hire-page">
       <Navbar />
       <div className="hire-page-content">
-        <div className="mb-8 sm:mb-10">
+        <header className="hire-page-header">
           <h1 className="hire-title-lg">Browse jobs</h1>
           <p className="hire-subtitle">
             Search by role, skill, company, or location.
           </p>
-          <div className="hire-search-bar mt-6 max-w-2xl">
+          <div className="hire-search-bar mt-4 max-w-full sm:mt-6 md:max-w-2xl lg:max-w-3xl">
             <input
               type="text"
               placeholder='Try "Full Stack", "Pune", "Backend"…'
@@ -60,12 +60,12 @@ const Browse = () => {
             <Button
               type="button"
               onClick={submitSearch}
-              className="h-11 shrink-0 rounded-none rounded-r-full px-5 sm:h-12 sm:px-6"
+              className="h-11 shrink-0 rounded-none rounded-r-full px-4 sm:h-12 sm:px-6"
             >
               <Search className="h-5 w-5" />
             </Button>
           </div>
-        </div>
+        </header>
 
         {!hasCriteria ? (
           <div className="hire-empty-state">
@@ -83,11 +83,11 @@ const Browse = () => {
           </div>
         ) : (
           <>
-            <p className="mb-6 text-muted-foreground">
+            <p className="mb-4 text-sm text-muted-foreground sm:mb-6 sm:text-base">
               {allJobs.length} {allJobs.length === 1 ? "role" : "roles"}{" "}
               matched.
             </p>
-            <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-3">
+            <div className="hire-grid-jobs">
               {allJobs.map((job) => (
                 <Job key={job._id} job={job} />
               ))}

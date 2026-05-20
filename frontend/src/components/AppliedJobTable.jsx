@@ -39,7 +39,7 @@ const statusBadgeClass = (status) => {
 const AppliedJobTable = () => {
   const { allAppliedJobs } = useSelector((store) => store.job);
   return (
-    <div>
+    <div className="hire-table-scroll mt-4">
       <Table>
         <TableCaption>A list of your applied jobs</TableCaption>
         <TableHeader>

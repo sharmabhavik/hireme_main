@@ -1,35 +1,70 @@
-import { useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./shared/Navbar";
 import Footer from "./shared/Footer";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { INTERVIEW_API_END_POINT } from "../utils/constant";
+import InterviewQuestionCard from "./InterviewQuestionCard";
+import { formatFeedbackDisplay } from "@/utils/interviewFormat";
 
 function getSpeechRecognition() {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   return SR ? new SR() : null;
 }
 
-function speak(text) {
-  try {
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.rate = 1;
-    utter.pitch = 1;
-    window.speechSynthesis.cancel();
-    window.speechSynthesis.speak(utter);
-  } catch {
-    // ignore
+const VOICE_STORAGE_KEY = "hireme-mock-interview-voice";
+
+/** English voices from the browser — free, no API key (best on Chrome / Edge). */
+function getEnglishVoices() {
+  const all = window.speechSynthesis?.getVoices() || [];
+  return all
+    .filter((v) => v.lang?.toLowerCase().startsWith("en"))
+    .sort((a, b) => {
+      const score = (v) => {
+        let s = 0;
+        if (/google.*english/i.test(v.name)) s += 50;
+        if (/microsoft.*natural/i.test(v.name)) s += 45;
+        if (/natural|neural|premium/i.test(v.name)) s += 35;
+        if (/samantha|karen|daniel|moira|tessa|zira|jenny|aria/i.test(v.name))
+          s += 25;
+        if (v.lang === "en-US") s += 10;
+        if (v.default) s += 5;
+        return s;
+      };
+      return score(b) - score(a);
+    });
+}
+
+/** Auto-pick the smoothest free voice available on this device. */
+function pickPreferredVoice(voices) {
+  if (!voices?.length) return null;
+  return voices[0];
+}
+
+function resolveVoice(voices, voiceURI) {
+  if (!voices?.length) return null;
+  if (voiceURI) {
+    const found = voices.find((v) => v.voiceURI === voiceURI);
+    if (found) return found;
   }
+  return pickPreferredVoice(voices);
 }
 
 export default function MockInterview() {
   const recognitionRef = useRef(null);
+  const listenIntentRef = useRef(false);
+  const finalTranscriptRef = useRef("");
+  const voicesRef = useRef([]);
+  const speakRetryRef = useRef(null);
   const navigate = useNavigate();
+
+  const [availableVoices, setAvailableVoices] = useState([]);
+  const [selectedVoiceURI, setSelectedVoiceURI] = useState("");
 
   const [targetRole, setTargetRole] = useState("");
   const [difficulty, setDifficulty] = useState("");
-  const [round, setRound] = useState(""); // hr | aptitude | coding
+  const [round, setRound] = useState("");
 
   const [sessionId, setSessionId] = useState(null);
   const [question, setQuestion] = useState("");
@@ -40,72 +75,220 @@ export default function MockInterview() {
   const [pendingNextQuestion, setPendingNextQuestion] = useState("");
 
   const [isListening, setIsListening] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [answeredCount, setAnsweredCount] = useState(0);
+  const [maxTurns, setMaxTurns] = useState(5);
 
-  const pdfUrl = useMemo(() => {
-    if (!sessionId) return "";
-    return `${INTERVIEW_API_END_POINT}/${sessionId}/pdf`;
-  }, [sessionId]);
+  useEffect(() => {
+    const loadVoices = () => {
+      const en = getEnglishVoices();
+      voicesRef.current = en;
+      setAvailableVoices(en);
 
-  const startListening = () => {
+      if (en.length === 0) return;
+
+      const saved = localStorage.getItem(VOICE_STORAGE_KEY);
+      const savedVoice = saved ? en.find((v) => v.voiceURI === saved) : null;
+      const defaultVoice = savedVoice || pickPreferredVoice(en);
+
+      setSelectedVoiceURI((current) => {
+        if (current && en.some((v) => v.voiceURI === current)) return current;
+        return defaultVoice?.voiceURI || en[0].voiceURI;
+      });
+    };
+
+    loadVoices();
+    window.speechSynthesis?.addEventListener("voiceschanged", loadVoices);
+    return () => {
+      window.speechSynthesis?.removeEventListener("voiceschanged", loadVoices);
+      if (speakRetryRef.current) {
+        clearTimeout(speakRetryRef.current);
+      }
+    };
+  }, []);
+
+  const activeVoice = useMemo(
+    () => resolveVoice(availableVoices, selectedVoiceURI),
+    [availableVoices, selectedVoiceURI],
+  );
+
+  const handleVoiceChange = (uri) => {
+    setSelectedVoiceURI(uri);
+    localStorage.setItem(VOICE_STORAGE_KEY, uri);
+  };
+
+  const stopSpeaking = useCallback(() => {
+    try {
+      window.speechSynthesis?.cancel();
+    } catch {
+      // ignore
+    }
+    setIsSpeaking(false);
+  }, []);
+
+  const speakWithVoice = useCallback(
+    (text, voiceURI, isRetry = false) => {
+      const trimmed = String(text || "").trim();
+      if (!trimmed || !window.speechSynthesis) return;
+
+      const voices =
+        voicesRef.current.length > 0
+          ? voicesRef.current
+          : getEnglishVoices();
+      voicesRef.current = voices;
+
+      const voice = resolveVoice(voices, voiceURI || selectedVoiceURI);
+
+      if (!voice && voices.length === 0 && !isRetry) {
+        speakRetryRef.current = setTimeout(() => {
+          const loaded = getEnglishVoices();
+          if (loaded.length) {
+            voicesRef.current = loaded;
+            setAvailableVoices(loaded);
+            speakWithVoice(text, voiceURI || selectedVoiceURI, true);
+          } else {
+            setError(
+              "No AI voice found. Open this page in Chrome or Edge, then try Preview voice.",
+            );
+          }
+        }, 300);
+        return;
+      }
+
+      stopSpeaking();
+
+      const utter = new SpeechSynthesisUtterance(trimmed);
+      if (voice) {
+        utter.voice = voice;
+        utter.lang = voice.lang;
+      } else {
+        utter.lang = "en-US";
+      }
+      utter.rate = 0.9;
+      utter.pitch = 1;
+      utter.volume = 1;
+
+      utter.onstart = () => setIsSpeaking(true);
+      utter.onend = () => setIsSpeaking(false);
+      utter.onerror = () => setIsSpeaking(false);
+
+      window.speechSynthesis.speak(utter);
+    },
+    [selectedVoiceURI, stopSpeaking],
+  );
+
+  const speak = useCallback(
+    (text) => speakWithVoice(text, selectedVoiceURI),
+    [speakWithVoice, selectedVoiceURI],
+  );
+
+  const previewVoice = () => {
+    speakWithVoice(
+      "Hello. I will read your interview questions in this voice.",
+      selectedVoiceURI,
+    );
+  };
+
+  const stopListening = useCallback(() => {
+    listenIntentRef.current = false;
+    setIsListening(false);
+    try {
+      recognitionRef.current?.abort();
+    } catch {
+      try {
+        recognitionRef.current?.stop();
+      } catch {
+        // ignore
+      }
+    }
+    recognitionRef.current = null;
+  }, []);
+
+  const startListening = useCallback(() => {
     setError("");
+    stopSpeaking();
+
     const recognition = getSpeechRecognition();
     if (!recognition) {
       setError(
-        "SpeechRecognition not supported in this browser. Use Chrome/Edge.",
+        "Speech recognition is not supported in this browser. Please use Chrome or Edge.",
       );
       return;
     }
 
+    stopListening();
+
     recognitionRef.current = recognition;
+    listenIntentRef.current = true;
+    finalTranscriptRef.current = answer.trim() ? `${answer.trim()} ` : "";
+
     recognition.lang = "en-US";
     recognition.interimResults = true;
     recognition.continuous = true;
-
-    let finalText = "";
+    recognition.maxAlternatives = 1;
 
     recognition.onresult = (event) => {
       let interim = "";
       for (let i = event.resultIndex; i < event.results.length; i++) {
-        const transcript = event.results[i][0].transcript;
-        if (event.results[i].isFinal) {
-          finalText += transcript + " ";
+        const result = event.results[i];
+        const transcript = result[0]?.transcript || "";
+        if (result.isFinal) {
+          finalTranscriptRef.current += transcript + " ";
         } else {
           interim += transcript;
         }
       }
-      setAnswer((finalText + interim).trim());
+      setAnswer((finalTranscriptRef.current + interim).trim());
     };
 
     recognition.onerror = (e) => {
+      if (e?.error === "aborted") return;
+      listenIntentRef.current = false;
       setIsListening(false);
-      setError(e?.error ? `Mic error: ${e.error}` : "Mic error");
+      if (e?.error === "not-allowed") {
+        setError("Microphone permission denied. Allow mic access and try again.");
+      } else if (e?.error === "no-speech") {
+        setError("No speech detected. Speak clearly and try again.");
+      } else {
+        setError(e?.error ? `Mic error: ${e.error}` : "Mic error");
+      }
     };
 
     recognition.onend = () => {
-      setIsListening(false);
+      if (!listenIntentRef.current) {
+        setIsListening(false);
+        return;
+      }
+      try {
+        recognition.start();
+      } catch {
+        listenIntentRef.current = false;
+        setIsListening(false);
+      }
     };
 
     setIsListening(true);
-    recognition.start();
-  };
-
-  const stopListening = () => {
     try {
-      recognitionRef.current?.stop();
+      recognition.start();
     } catch {
-      // ignore
+      listenIntentRef.current = false;
+      setIsListening(false);
+      setError("Could not start microphone. Wait a moment and try again.");
     }
-  };
+  }, [answer, stopListening, stopSpeaking]);
 
   const startInterview = async () => {
+    stopListening();
+    stopSpeaking();
     setLoading(true);
     setError("");
     setDone(false);
     setLastFeedback("");
     setLastScore(null);
     setPendingNextQuestion("");
+    setAnsweredCount(0);
     try {
       const resp = await fetch(`${INTERVIEW_API_END_POINT}/start`, {
         method: "POST",
@@ -120,7 +303,10 @@ export default function MockInterview() {
 
       setSessionId(data.sessionId);
       setQuestion(data.question);
+      setMaxTurns(data.maxTurns ?? 5);
+      setAnsweredCount(data.answeredCount ?? 0);
       setAnswer("");
+      finalTranscriptRef.current = "";
       speak(data.question);
     } catch (e) {
       setError(e?.message || "Failed to start interview");
@@ -173,6 +359,8 @@ export default function MockInterview() {
 
   const submitAnswer = async () => {
     if (!sessionId) return;
+    stopListening();
+    stopSpeaking();
     setLoading(true);
     setError("");
 
@@ -183,7 +371,7 @@ export default function MockInterview() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
-          body: JSON.stringify({ answer }),
+          body: JSON.stringify({ answer: answer.trim() }),
         },
       );
       const data = await resp.json();
@@ -198,13 +386,13 @@ export default function MockInterview() {
         setDone(true);
         setPendingNextQuestion("");
         speak("Interview completed. You can download the PDF report.");
-        // Take the user to the analysis dashboard immediately.
         navigate(`/interview/${sessionId}/analysis`);
         return;
       }
 
       setPendingNextQuestion(data.nextQuestion || "");
       setAnswer("");
+      finalTranscriptRef.current = "";
     } catch (e) {
       setError(e?.message || "Failed to submit answer");
     } finally {
@@ -214,20 +402,127 @@ export default function MockInterview() {
 
   const goToNextQuestion = () => {
     if (!pendingNextQuestion || done) return;
+    stopListening();
     setQuestion(pendingNextQuestion);
     setPendingNextQuestion("");
     setAnswer("");
+    finalTranscriptRef.current = "";
     speak(pendingNextQuestion);
   };
+
+  const endInterviewEarly = async () => {
+    if (!sessionId || done) return;
+    if (answeredCount < 1) {
+      setError("Answer at least one question before ending the interview.");
+      return;
+    }
+
+    const ok = window.confirm(
+      `End mock interview now?\n\nYour report will include ${answeredCount} answered question${answeredCount === 1 ? "" : "s"} (up to ${maxTurns} max).`,
+    );
+    if (!ok) return;
+
+    stopListening();
+    stopSpeaking();
+    setLoading(true);
+    setError("");
+
+    try {
+      const resp = await fetch(
+        `${INTERVIEW_API_END_POINT}/${sessionId}/finalize`,
+        { method: "POST", credentials: "include" },
+      );
+      const data = await resp.json();
+      if (!resp.ok || !data?.success) {
+        throw new Error(data?.message || "Failed to end interview");
+      }
+
+      setDone(true);
+      setPendingNextQuestion("");
+      setQuestion("");
+      if (typeof data.answeredCount === "number") {
+        setAnsweredCount(data.answeredCount);
+      }
+      navigate(`/interview/${sessionId}/analysis`);
+    } catch (e) {
+      setError(e?.message || "Failed to end interview");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const currentQuestionNumber = pendingNextQuestion
+    ? answeredCount + 1
+    : answeredCount + (question ? 1 : 0);
+
+  const feedbackBullets = formatFeedbackDisplay(lastFeedback);
+
+  useEffect(() => {
+    return () => {
+      listenIntentRef.current = false;
+      stopListening();
+      stopSpeaking();
+    };
+  }, [stopListening, stopSpeaking]);
 
   return (
     <div className="hire-page">
       <Navbar />
-      <div className="hire-page-content mx-auto max-w-3xl space-y-4">
+      <div className="hire-page-content hire-page-content-compact space-y-4 sm:space-y-6">
         <h1 className="hire-title text-2xl sm:text-3xl">AI Mock Interview (Voice)</h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <div className="md:col-span-2">
+        <div className="hire-card space-y-3 p-3 sm:p-4">
+          <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-sm font-medium text-foreground">AI interviewer voice</p>
+              <p className="text-xs text-muted-foreground">
+                Free browser voice (Chrome / Edge recommended). Pick a natural English voice below.
+              </p>
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={previewVoice}
+              disabled={isSpeaking || availableVoices.length === 0}
+              className="w-full shrink-0 sm:w-auto"
+            >
+              Preview voice
+            </Button>
+          </div>
+          {availableVoices.length > 0 ? (
+            <div className="space-y-2">
+              <label className="text-xs text-muted-foreground" htmlFor="ai-voice-select">
+                Voice
+              </label>
+              <select
+                id="ai-voice-select"
+                className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm text-foreground"
+                value={selectedVoiceURI}
+                onChange={(e) => handleVoiceChange(e.target.value)}
+                disabled={isSpeaking}
+              >
+                {availableVoices.map((v) => (
+                  <option key={v.voiceURI} value={v.voiceURI}>
+                    {v.name} ({v.lang})
+                  </option>
+                ))}
+              </select>
+              {activeVoice ? (
+                <p className="text-xs text-muted-foreground">
+                  Using: <span className="font-medium text-foreground">{activeVoice.name}</span>
+                </p>
+              ) : null}
+            </div>
+          ) : (
+            <p className="text-xs text-amber-700 dark:text-amber-300">
+              Voices still loading — use Chrome or Edge, or click Preview voice in a moment.
+            </p>
+          )}
+        </div>
+
+        <div className="hire-form-grid lg:grid-cols-3">
+          <div className="lg:col-span-2">
             <label className="text-sm">Target Role</label>
             <Input
               value={targetRole}
@@ -251,7 +546,7 @@ export default function MockInterview() {
           <div>
             <label className="text-sm">Difficulty</label>
             <select
-              className="w-full h-10 border rounded-md px-3 text-sm"
+              className="w-full h-10 border rounded-md px-3 text-sm bg-background text-foreground"
               value={difficulty}
               onChange={(e) => setDifficulty(e.target.value)}
               disabled={loading || Boolean(sessionId)}
@@ -266,7 +561,7 @@ export default function MockInterview() {
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-2">
+        <div className="hire-stack-sm flex-wrap">
           <Button
             variant={round === "hr" ? "default" : "secondary"}
             onClick={() => setRound("hr")}
@@ -300,43 +595,99 @@ export default function MockInterview() {
           ) : null}
         </div>
 
-        <div className="flex gap-2">
+        {sessionId && !done ? (
+          <div className="hire-card flex flex-col gap-2 p-3 sm:flex-row sm:items-center sm:justify-between sm:p-4">
+            <div className="text-sm text-muted-foreground">
+              <span className="font-medium text-foreground">
+                Progress: {answeredCount} answered
+              </span>
+              {" · "}
+              Up to {maxTurns} questions
+              {!pendingNextQuestion && question
+                ? ` · On question ${currentQuestionNumber}`
+                : null}
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={endInterviewEarly}
+              disabled={loading || answeredCount < 1}
+              className="w-full border-destructive/40 text-destructive hover:bg-destructive/10 sm:w-auto"
+            >
+              End mock interview
+            </Button>
+          </div>
+        ) : null}
+
+        <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
           <Button
             onClick={startInterview}
             disabled={!canStart || Boolean(sessionId)}
+            className="w-full sm:w-auto"
           >
             Start Interview
           </Button>
-          {question ? (
-            <Button
-              variant="secondary"
-              onClick={() => speak(question)}
-              disabled={loading}
-            >
-              Speak Question
-            </Button>
+          {question && !pendingNextQuestion ? (
+            <>
+              <Button
+                variant="secondary"
+                onClick={() => speak(question)}
+                disabled={loading || isSpeaking}
+                className="w-full sm:w-auto"
+              >
+                Speak Question
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={stopSpeaking}
+                disabled={!isSpeaking}
+                className="w-full sm:w-auto"
+              >
+                Stop Speaking
+              </Button>
+            </>
           ) : null}
         </div>
 
         {error ? <div className="text-sm text-red-600">{error}</div> : null}
 
-        {question ? (
-          <div className="hire-card space-y-2 p-3 sm:p-4">
-            <div className="text-sm text-muted-foreground">Question</div>
-            <div className="text-base">{question}</div>
+        {isSpeaking ? (
+          <p className="text-xs text-muted-foreground">
+            AI is reading the question — use Stop Speaking before using the mic so your answer is not mixed with the question audio.
+          </p>
+        ) : null}
+
+        {pendingNextQuestion ? (
+          <div className="hire-card border-primary/20 bg-primary/5 p-4">
+            <p className="text-sm font-medium text-foreground">
+              Answer submitted — review feedback below, then continue.
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Next question is ready when you click &quot;Next Question&quot;.
+            </p>
           </div>
         ) : null}
 
-        {question ? (
+        {question && !pendingNextQuestion ? (
+          <InterviewQuestionCard
+            question={question}
+            questionNumber={currentQuestionNumber}
+            round={round}
+            difficulty={difficulty}
+          />
+        ) : null}
+
+        {question && !pendingNextQuestion ? (
           <div className="hire-card space-y-3 p-3 sm:p-4">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <div className="text-sm text-muted-foreground">Your Answer</div>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 {!isListening ? (
                   <Button
                     variant="secondary"
                     onClick={startListening}
-                    disabled={loading}
+                    disabled={loading || isSpeaking}
+                    className="w-full sm:w-auto"
                   >
                     Start Mic
                   </Button>
@@ -345,30 +696,47 @@ export default function MockInterview() {
                     variant="secondary"
                     onClick={stopListening}
                     disabled={loading}
+                    className="w-full sm:w-auto"
                   >
                     Stop Mic
                   </Button>
                 )}
+                {isSpeaking ? (
+                  <Button
+                    variant="destructive"
+                    onClick={stopSpeaking}
+                    className="w-full sm:w-auto"
+                  >
+                    Stop Speaking
+                  </Button>
+                ) : null}
               </div>
             </div>
 
             <textarea
-              className="w-full min-h-32 border rounded-md p-2 text-sm"
+              className="w-full min-h-32 rounded-md border border-input bg-background p-2 text-sm text-foreground"
               value={answer}
-              onChange={(e) => setAnswer(e.target.value)}
-              placeholder="Type or speak your answer…"
+              onChange={(e) => {
+                setAnswer(e.target.value);
+                finalTranscriptRef.current = e.target.value.trim()
+                  ? `${e.target.value.trim()} `
+                  : "";
+              }}
+              placeholder="Type your answer, or use Start Mic after the question finishes speaking…"
               disabled={loading}
             />
 
-            <div className="flex gap-2">
+            <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
               <Button
                 onClick={submitAnswer}
                 disabled={
                   loading ||
                   !answer.trim() ||
                   done ||
-                  Boolean(pendingNextQuestion)
+                  Boolean(pendingNextQuestion) ||
+                  isListening
                 }
+                className="w-full sm:w-auto"
               >
                 Submit Answer
               </Button>
@@ -376,60 +744,54 @@ export default function MockInterview() {
                 variant="secondary"
                 onClick={goToNextQuestion}
                 disabled={loading || done || !pendingNextQuestion}
+                className="w-full sm:w-auto"
               >
                 Next Question
               </Button>
               <Button
                 variant="secondary"
                 onClick={() => speak(answer)}
-                disabled={loading || !answer.trim()}
+                disabled={loading || !answer.trim() || isSpeaking}
+                className="w-full sm:w-auto"
               >
-                Speak My Answer
+                Hear My Answer
               </Button>
             </div>
           </div>
         ) : null}
 
         {lastFeedback ? (
-          <div className="hire-card space-y-1 p-3 sm:p-4">
-            <div className="flex items-center justify-between">
-              <div className="text-sm text-muted-foreground">Feedback</div>
+          <div className="hire-card space-y-2 p-3 sm:p-4">
+            <div className="flex items-center justify-between gap-2">
+              <div className="text-sm font-medium text-foreground">
+                Feedback on question {answeredCount}
+              </div>
               {typeof lastScore === "number" ? (
-                <div className="text-sm">Score: {lastScore}/10</div>
+                <span className="hire-badge-primary text-xs">
+                  Score: {lastScore}/10
+                </span>
               ) : null}
             </div>
-            <div className="text-sm whitespace-pre-wrap">{lastFeedback}</div>
+            {feedbackBullets.length > 0 ? (
+              <ul className="list-disc space-y-1.5 pl-5 text-sm text-foreground/90">
+                {feedbackBullets.map((item, i) => (
+                  <li key={i}>{item}</li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-sm whitespace-pre-wrap text-muted-foreground">
+                {lastFeedback}
+              </p>
+            )}
           </div>
         ) : null}
 
-        {sessionId ? (
-          <div className="flex items-center gap-2">
-            <a
-              href={pdfUrl}
-              className={`text-sm underline ${done ? "" : "pointer-events-none opacity-50"}`}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Download PDF report
-            </a>
-            {done ? (
-              <Button
-                variant="secondary"
-                onClick={() => navigate(`/interview/${sessionId}/analysis`)}
-              >
-                View Analysis
-              </Button>
-            ) : null}
-            {!done ? (
-              <span className="text-xs text-muted-foreground">
-                (available after completion)
-              </span>
-            ) : null}
-          </div>
-        ) : null}
-
-        <div className="text-xs text-muted-foreground">
-          Tip: Use Chrome/Edge for best voice support.
+        <div className="text-xs text-muted-foreground space-y-1">
+          <p>
+            <strong className="text-foreground">AI voice:</strong> built into your browser (no extra cost).
+            For the smoothest sound, use Edge or Chrome and choose a voice labeled Google English or Microsoft Natural.
+          </p>
+          <p>Best experience: quiet room, headphones, Stop Speaking before Start Mic.</p>
         </div>
       </div>
       <Footer />

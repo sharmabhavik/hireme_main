@@ -16,22 +16,22 @@ const HeroSection = () => {
     }
 
     return (
-        <section className="hire-hero-gradient px-4 pb-12 pt-8 sm:pb-16 sm:pt-12 md:pt-14">
-            <div className='mx-auto flex max-w-3xl flex-col gap-5 text-center sm:gap-6'>
+        <section className="hire-hero-gradient px-4 pb-10 pt-8 sm:pb-14 sm:pt-12 md:pt-14">
+            <div className='hire-hero-inner'>
                 <span className="hire-pill mx-auto">
                     Smart hiring starts here
                 </span>
-                <h1 className='text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl md:text-5xl sm:leading-tight'>
+                <h1 className='text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl md:text-5xl md:leading-tight'>
                     Land the role that{' '}
                     <span className="hire-gradient-text">
                         fits you
                     </span>
-                    —not the other way around
+                    <span className="block sm:inline"> —not the other way around</span>
                 </h1>
-                <p className="mx-auto max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+                <p className="mx-auto max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg md:max-w-2xl">
                     Search thousands of openings, filter by what matters, and apply with a profile recruiters actually read.
                 </p>
-                <div className='hire-search-bar mx-auto max-w-xl shadow-md'>
+                <div className='hire-search-bar w-full max-w-xl shadow-md sm:max-w-2xl'>
                     <input
                         type="text"
                         placeholder='Role, skill, or company…'
@@ -43,7 +43,7 @@ const HeroSection = () => {
                     <Button
                         type="button"
                         onClick={searchJobHandler}
-                        className="h-11 shrink-0 rounded-none rounded-r-full px-5 sm:h-12 sm:px-6"
+                        className="h-11 shrink-0 rounded-none rounded-r-full px-4 sm:h-12 sm:px-6"
                     >
                         <Search className='h-5 w-5' />
                     </Button>

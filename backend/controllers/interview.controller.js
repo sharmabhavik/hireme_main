@@ -5,6 +5,12 @@ import { HfError, hfChatCompletions } from "../utils/hfChat.js";
 import { basicFeedback, getFallbackQuestions } from "../utils/interviewBank.js";
 import { buildInterviewPdfBuffer } from "../utils/pdfReport.js";
 import {
+  formatInterviewQuestion,
+  getAnsweredTurns,
+  sanitizeText,
+  stripUnansweredTurns,
+} from "../utils/interviewFormat.js";
+import {
   normalizeDomain,
   normalizeRound,
   ROUNDS,
@@ -13,11 +19,12 @@ import {
 const MAX_ANSWER_CHARS = 4000;
 const DEFAULT_MAX_TURNS = 5;
 
-function sanitizeText(value) {
-  return String(value ?? "")
-    .replace(/\s+/g, " ")
-    .trim();
-}
+const QUESTION_STYLE_RULES = `
+Question formatting rules:
+- Write ONE clear question only (1–2 short sentences).
+- Use plain text only — no markdown, bullets, numbering, or labels like "Question:".
+- End with a question mark.
+- Be specific and interview-appropriate for the role and round.`;
 
 function roundRules(round, domainLabel) {
   if (round === ROUNDS.APTITUDE) {
@@ -53,7 +60,8 @@ Hard rules:
 - If the answer is vague, short, or incoherent, explicitly say so and explain why that harms the response.
 - Feedback must reference at least 1 concrete detail from the answer (quote a short phrase if possible).
 - Ask ONE next question at a time. The next question should feel like a follow-up based on what they just said, or a natural progression.
-- Be concise and professional.`;
+- Be concise and professional.
+${QUESTION_STYLE_RULES}`;
 }
 
 function formatTurnsForPrompt(turns) {
@@ -93,7 +101,7 @@ async function generateFirstQuestion({ targetRole, difficulty, round }) {
     max_tokens: 200,
     temperature: 0.4,
   });
-  return sanitizeText(content);
+  return formatInterviewQuestion(content);
 }
 
 async function evaluateAndAskNext({
@@ -161,7 +169,7 @@ function parseEvalJson(text) {
   const feedbackArr = Array.isArray(parsed?.feedback)
     ? parsed.feedback.map((f) => sanitizeText(f)).filter(Boolean)
     : [];
-  const nextQuestion = sanitizeText(parsed?.nextQuestion);
+  const nextQuestion = formatInterviewQuestion(parsed?.nextQuestion);
 
   return {
     score,
@@ -269,7 +277,8 @@ export const getInterviewAnalysis = async (req, res) => {
     }
 
     const turns = Array.isArray(session.turns) ? session.turns : [];
-    const scoredTurns = turns.filter(
+    const answeredTurns = getAnsweredTurns(turns);
+    const scoredTurns = answeredTurns.filter(
       (t) => typeof t?.score === "number" && Number.isFinite(t.score),
     );
 
@@ -280,7 +289,7 @@ export const getInterviewAnalysis = async (req, res) => {
       unscored: 0,
     };
 
-    const perQuestion = turns.map((t, idx) => {
+    const perQuestion = answeredTurns.map((t, idx) => {
       const score =
         typeof t?.score === "number" && Number.isFinite(t.score)
           ? t.score
@@ -295,9 +304,10 @@ export const getInterviewAnalysis = async (req, res) => {
       };
     });
 
-    const avg = computeAverageTurnScore(turns);
-    const total = turns.length;
+    const avg = computeAverageTurnScore(answeredTurns);
+    const total = answeredTurns.length;
     const scored = scoredTurns.length;
+    const pendingCount = turns.length - answeredTurns.length;
 
     const max = scoredTurns.length
       ? Math.max(...scoredTurns.map((t) => t.score))
@@ -324,9 +334,14 @@ export const getInterviewAnalysis = async (req, res) => {
             ? session.finalScore
             : undefined,
         overallFeedback: sanitizeText(session.overallFeedback),
+        endedEarly:
+          session.status === "completed" &&
+          answeredTurns.length < (session.maxTurns || DEFAULT_MAX_TURNS),
       },
       summary: {
         totalQuestions: total,
+        answeredQuestions: total,
+        pendingQuestions: pendingCount,
         scoredQuestions: scored,
         averageScore: typeof avg === "number" ? avg : undefined,
         bestScore: typeof max === "number" ? round1(max) : undefined,
@@ -412,9 +427,10 @@ export const startInterview = async (req, res) => {
     } catch (e) {
       // fallback mode
       const questions = getFallbackQuestions(role);
-      firstQuestion = questions[0];
+      firstQuestion = formatInterviewQuestion(questions[0]);
     }
 
+    firstQuestion = formatInterviewQuestion(firstQuestion);
     session.turns.push({ question: firstQuestion });
     await session.save();
 
@@ -424,6 +440,9 @@ export const startInterview = async (req, res) => {
       question: firstQuestion,
       status: session.status,
       turnIndex: session.turns.length - 1,
+      maxTurns: session.maxTurns,
+      questionNumber: 1,
+      answeredCount: 0,
     });
   } catch (error) {
     console.error(error);
@@ -432,6 +451,39 @@ export const startInterview = async (req, res) => {
       .json({ success: false, message: "Failed to start interview" });
   }
 };
+
+async function completeSession(session) {
+  session.turns = stripUnansweredTurns(session.turns);
+  session.status = "completed";
+
+  const avgScore = computeAverageTurnScore(session.turns);
+  if (typeof avgScore === "number") session.finalScore = avgScore;
+
+  if (!session.overallFeedback && session.turns.length > 0) {
+    try {
+      const assessment = await generateOverallAssessment({
+        targetRole: session.targetRole,
+        difficulty: session.difficulty,
+        turns: session.turns,
+      });
+      if (assessment?.overallFeedback) {
+        session.overallFeedback = assessment.overallFeedback;
+      }
+      if (typeof assessment?.finalScore === "number") {
+        session.finalScore = assessment.finalScore;
+      }
+    } catch {
+      const n = session.turns.length;
+      session.overallFeedback =
+        n > 0
+          ? `Interview ended after ${n} answered question${n === 1 ? "" : "s"}. Review per-question feedback and practice structured answers with specific examples.`
+          : "Interview ended. Answer at least one question next time to generate a full report.";
+    }
+  }
+
+  await session.save();
+  return getAnsweredTurns(session.turns).length;
+}
 
 export const answerTurn = async (req, res) => {
   try {
@@ -510,8 +562,9 @@ export const answerTurn = async (req, res) => {
       feedback = fb.feedback;
 
       const questions = getFallbackQuestions(session.targetRole);
-      nextQuestion =
-        questions[session.turns.length] || "Thank you. Interview complete.";
+      nextQuestion = formatInterviewQuestion(
+        questions[session.turns.length] || "Thank you. Interview complete.",
+      );
     }
 
     session.turns[currentIndex].feedback = feedback;
@@ -521,30 +574,7 @@ export const answerTurn = async (req, res) => {
     const shouldComplete = reachedMax;
 
     if (shouldComplete) {
-      session.status = "completed";
-
-      const avgScore = computeAverageTurnScore(session.turns);
-      if (typeof avgScore === "number") session.finalScore = avgScore;
-
-      if (!session.overallFeedback) {
-        try {
-          const assessment = await generateOverallAssessment({
-            targetRole: session.targetRole,
-            difficulty: session.difficulty,
-            turns: session.turns,
-          });
-          if (assessment?.overallFeedback) {
-            session.overallFeedback = assessment.overallFeedback;
-          }
-          if (typeof assessment?.finalScore === "number") {
-            session.finalScore = assessment.finalScore;
-          }
-        } catch {
-          session.overallFeedback =
-            "Interview completed. Review per-question feedback and focus on giving structured answers with specific examples and measurable outcomes.";
-        }
-      }
-      await session.save();
+      const answeredCount = await completeSession(session);
 
       return res.status(200).json({
         success: true,
@@ -557,11 +587,16 @@ export const answerTurn = async (req, res) => {
             : undefined,
         overallFeedback: session.overallFeedback || undefined,
         done: true,
+        answeredCount,
+        maxTurns: session.maxTurns,
       });
     }
 
+    nextQuestion = formatInterviewQuestion(nextQuestion);
     session.turns.push({ question: nextQuestion });
     await session.save();
+
+    const answeredCount = getAnsweredTurns(session.turns).length;
 
     return res.status(200).json({
       success: true,
@@ -571,6 +606,9 @@ export const answerTurn = async (req, res) => {
       nextQuestion,
       done: false,
       turnIndex: session.turns.length - 1,
+      answeredCount,
+      maxTurns: session.maxTurns,
+      questionNumber: answeredCount + 1,
     });
   } catch (error) {
     console.error(error);
@@ -597,32 +635,37 @@ export const finalizeInterview = async (req, res) => {
       return res.status(403).json({ success: false, message: "Not allowed" });
     }
 
-    session.status = "completed";
-
-    const avgScore = computeAverageTurnScore(session.turns);
-    if (typeof avgScore === "number") session.finalScore = avgScore;
-
-    if (!session.overallFeedback) {
-      try {
-        const assessment = await generateOverallAssessment({
-          targetRole: session.targetRole,
-          difficulty: session.difficulty,
-          turns: session.turns,
-        });
-        if (assessment?.overallFeedback)
-          session.overallFeedback = assessment.overallFeedback;
-        if (typeof assessment?.finalScore === "number")
-          session.finalScore = assessment.finalScore;
-      } catch {
-        session.overallFeedback =
-          "Overall: focus on structured answers (STAR), clarity, and quantifying results. Use specific examples and avoid vague one-liners.";
-      }
+    if (session.status === "completed") {
+      return res.status(200).json({
+        success: true,
+        status: session.status,
+        alreadyCompleted: true,
+        answeredCount: getAnsweredTurns(session.turns).length,
+        overallFeedback: session.overallFeedback,
+        finalScore:
+          typeof session.finalScore === "number"
+            ? session.finalScore
+            : undefined,
+      });
     }
-    await session.save();
+
+    const answeredBefore = getAnsweredTurns(session.turns).length;
+    if (answeredBefore < 1) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Answer at least one question before ending the interview.",
+      });
+    }
+
+    const answeredCount = await completeSession(session);
 
     return res.status(200).json({
       success: true,
       status: session.status,
+      endedEarly: true,
+      answeredCount,
+      maxTurns: session.maxTurns,
       overallFeedback: session.overallFeedback,
       finalScore:
         typeof session.finalScore === "number" ? session.finalScore : undefined,
@@ -666,7 +709,10 @@ export const downloadInterviewPdf = async (req, res) => {
       return res.status(403).json({ success: false, message: "Not allowed" });
     }
 
-    const pdf = await buildInterviewPdfBuffer(session);
+    const reportSession = session.toObject ? session.toObject() : session;
+    reportSession.turns = stripUnansweredTurns(reportSession.turns || []);
+
+    const pdf = await buildInterviewPdfBuffer(reportSession);
     const filename = `interview-report-${session._id}.pdf`;
 
     res.setHeader("Content-Type", "application/pdf");

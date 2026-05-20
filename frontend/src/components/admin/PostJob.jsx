@@ -63,9 +63,13 @@ const PostJob = () => {
     return (
         <div className="hire-page">
             <Navbar />
-            <div className='mx-auto flex max-w-4xl justify-center px-4 py-10 sm:px-6'>
+            <div className="hire-page-content hire-page-content-narrow">
                 <form onSubmit = {submitHandler} className='w-full hire-card-padded'>
-                    <div className='grid grid-cols-2 gap-2'>
+                    <header className="hire-page-header !mb-4 sm:!mb-6">
+                        <h1 className="hire-title">Publish a job</h1>
+                        <p className="hire-subtitle">Fill in role details below. Register a company first if the list is empty.</p>
+                    </header>
+                    <div className='hire-form-grid'>
                         <div>
                             <Label>Title</Label>
                             <Input
@@ -148,8 +152,10 @@ const PostJob = () => {
                         </div>
                         {
                             companies.length > 0 && (
+                                <div className="w-full sm:col-span-2">
+                                <Label>Company</Label>
                                 <Select onValueChange={selectChangeHandler}>
-                                    <SelectTrigger className="w-[180px]">
+                                    <SelectTrigger className="mt-1.5 w-full">
                                         <SelectValue placeholder="Select a Company" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -165,6 +171,7 @@ const PostJob = () => {
                                         </SelectGroup>
                                     </SelectContent>
                                 </Select>
+                                </div>
                             )
                         }
                     </div> 

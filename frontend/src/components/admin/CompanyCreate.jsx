@@ -36,21 +36,21 @@ const CompanyCreate = () => {
     return (
         <div className="hire-page">
             <Navbar />
-            <div className='mx-auto max-w-4xl px-4 py-10 sm:px-6'>
+            <div className="hire-page-content hire-page-content-narrow">
                 <div className='hire-card-padded'>
-                    <h1 className='font-bold text-2xl text-foreground'>Name your company</h1>
-                    <p className='mt-2 text-muted-foreground'>You can update branding and details on the next step.</p>
+                    <h1 className='hire-title'>Name your company</h1>
+                    <p className='hire-subtitle'>You can update branding and details on the next step.</p>
 
-                    <Label className="mt-8 block">Company name</Label>
+                    <Label className="mt-6 block sm:mt-8">Company name</Label>
                     <Input
                         type="text"
-                        className="my-2"
+                        className="my-2 w-full"
                         placeholder="Acme Labs, TechNova…"
                         onChange={(e) => setCompanyName(e.target.value)}
                     />
-                    <div className='mt-8 flex flex-wrap items-center gap-3'>
-                        <Button variant="outline" className="border-border" onClick={() => navigate("/admin/companies")}>Cancel</Button>
-                        <Button onClick={registerNewCompany}>Continue</Button>
+                    <div className='mt-6 flex flex-col gap-2 sm:mt-8 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3'>
+                        <Button variant="outline" className="w-full sm:w-auto" onClick={() => navigate("/admin/companies")}>Cancel</Button>
+                        <Button className="w-full sm:w-auto" onClick={registerNewCompany}>Continue</Button>
                     </div>
                 </div>
             </div>

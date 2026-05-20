@@ -23,7 +23,7 @@ const StudentDashboard = () => {
   return (
     <div className="hire-page">
       <Navbar />
-      <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8">
+      <div className="hire-page-content hire-page-content-medium">
         <div className="hire-card-padded">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
@@ -38,7 +38,7 @@ const StudentDashboard = () => {
               <Link to="/practice">Practice Mock Interview</Link>
             </Button>
           </div>
-          <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="hire-grid-stats-2 mt-6">
             <div className="hire-stat-box">
               <p className="text-sm font-semibold text-muted-foreground">
                 Applications
@@ -92,7 +92,7 @@ const StudentDashboard = () => {
           <p className="mt-1 text-sm text-muted-foreground">
             Roles you saved for later.
           </p>
-          <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="hire-grid-jobs mt-4">
             {savedJobs?.length ? (
               savedJobs.map((job) => (
                 <div

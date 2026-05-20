@@ -34,7 +34,7 @@ const Profile = () => {
   return (
     <div className="hire-page">
       <Navbar />
-      <div className="mx-auto max-w-4xl px-4 py-6 sm:px-6 sm:py-8">
+      <div className="hire-page-content hire-page-content-narrow">
         <div className="hire-card-padded">
           <div className="flex flex-col items-start justify-between gap-4 sm:flex-row">
             <div className="flex items-center gap-4">

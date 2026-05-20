@@ -156,9 +156,9 @@ const JobDescription = () => {
   return (
     <div className="hire-page">
       <Navbar />
-      <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-10">
+      <div className="hire-page-content hire-page-content-narrow">
         <div className="hire-card-padded">
-          <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
             <div>
               <h1 className="text-2xl font-bold tracking-tight text-foreground">
                 {singleJob?.title}
@@ -187,12 +187,12 @@ const JobDescription = () => {
                 </Badge>
               </div>
             </div>
-            <div className="flex flex-col gap-2 sm:items-end">
+            <div className="flex w-full flex-col gap-2 sm:flex-row sm:flex-wrap lg:w-auto lg:flex-col lg:items-end">
               <Popover open={applyMenuOpen} onOpenChange={setApplyMenuOpen}>
                 <PopoverTrigger asChild>
                   <Button
                     disabled={isApplied}
-                    className={`shrink-0 rounded-xl px-6 sm:px-8 ${isApplied ? "opacity-60 cursor-not-allowed" : ""}`}
+                    className={`w-full rounded-xl sm:w-auto lg:px-8 ${isApplied ? "opacity-60 cursor-not-allowed" : ""}`}
                     variant={isApplied ? "secondary" : "default"}
                   >
                     {isApplied ? "Already applied" : "Apply now"}
@@ -226,7 +226,7 @@ const JobDescription = () => {
               <Button
                 type="button"
                 variant="outline"
-                className="rounded-xl"
+                className="w-full rounded-xl sm:w-auto"
                 onClick={saveForLaterHandler}
                 disabled={isSaved}
               >

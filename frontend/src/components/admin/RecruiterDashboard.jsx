@@ -25,7 +25,7 @@ const RecruiterDashboard = () => {
   return (
     <div className="hire-page">
       <Navbar />
-      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+      <div className="hire-page-content hire-page-content-medium">
         <div className="hire-card-padded">
           <h1 className="text-2xl font-bold text-foreground">
             Recruiter dashboard
@@ -34,7 +34,7 @@ const RecruiterDashboard = () => {
             Overview of your postings.
           </p>
 
-          <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="hire-grid-stats-2 mt-6">
             <div className="hire-stat-box">
               <p className="text-sm font-semibold text-muted-foreground">Total jobs</p>
               <p className="mt-2 text-2xl font-bold text-foreground">
@@ -85,7 +85,7 @@ const RecruiterDashboard = () => {
             Click a job to view applicants.
           </p>
 
-          <div className="mt-6">
+          <div className="mt-6 hire-table-scroll">
             <Table>
               <TableCaption>Your posted jobs (latest first)</TableCaption>
               <TableHeader>

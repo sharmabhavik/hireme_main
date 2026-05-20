@@ -85,7 +85,7 @@ const CompanySetup = () => {
   return (
     <div className="hire-page">
       <Navbar />
-      <div className="mx-auto max-w-xl px-4 py-10 sm:px-6">
+      <div className="hire-page-content hire-page-content-form">
         <form
           onSubmit={submitHandler}
           className="hire-card-padded"
@@ -105,7 +105,7 @@ const CompanySetup = () => {
               Company profile
             </h1>
           </div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="hire-form-grid">
             <div>
               <Label>Company Name</Label>
               <Input

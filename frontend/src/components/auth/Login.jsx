@@ -73,7 +73,7 @@ const Login = () => {
     return (
         <div className="hire-page hire-auth-bg">
             <Navbar />
-            <div className='mx-auto flex max-w-7xl flex-1 flex-col items-center justify-center px-4 py-10 sm:px-6 sm:py-12'>
+            <div className="hire-page-content hire-page-content-compact flex flex-1 flex-col items-center justify-center">
                 <div className="mb-6 text-center sm:mb-8">
                     <BrandLogo size="lg" />
                     <p className="mt-3 text-muted-foreground">Welcome back. Sign in to continue.</p>

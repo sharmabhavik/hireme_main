@@ -83,7 +83,7 @@ const Navbar = () => {
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-md supports-backdrop-filter:bg-background/75">
-      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-3 px-4 sm:h-16 sm:px-6">
+      <div className="hire-section flex h-14 items-center justify-between gap-3 sm:h-16">
         <BrandLogo />
 
         <nav className="hidden items-center gap-6 md:flex lg:gap-8">

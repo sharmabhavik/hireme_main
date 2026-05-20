@@ -50,8 +50,8 @@ const Job = ({ job }) => {
   };
 
   return (
-    <div className="hire-job-card">
-      <div className="flex items-center justify-between">
+    <div className="hire-job-card h-full">
+      <div className="flex items-center justify-between gap-2">
         <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
           {daysAgoFunction(job?.createdAt) === 0
             ? "Posted today"
@@ -59,7 +59,7 @@ const Job = ({ job }) => {
         </p>
         <Button
           variant="outline"
-          className="rounded-full"
+          className="shrink-0 rounded-full"
           size="icon"
           type="button"
         >
@@ -69,7 +69,7 @@ const Job = ({ job }) => {
 
       <div className="mt-3 flex items-center gap-3">
         <Button
-          className="h-14 w-14 shrink-0 rounded-xl p-0"
+          className="h-12 w-12 shrink-0 rounded-xl p-0 sm:h-14 sm:w-14"
           variant="outline"
           size="icon"
         >
@@ -77,16 +77,16 @@ const Job = ({ job }) => {
             <AvatarImage src={job?.company?.logo} alt={job?.company?.name} />
           </Avatar>
         </Button>
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <h3 className="truncate font-semibold text-foreground">
             {job?.company?.name}
           </h3>
-          <p className="text-sm text-muted-foreground">{job?.location || "India"}</p>
+          <p className="truncate text-sm text-muted-foreground">{job?.location || "India"}</p>
         </div>
       </div>
 
       <div className="mt-4 flex-1">
-        <h4 className="text-lg font-bold text-foreground">{job?.title}</h4>
+        <h4 className="text-base font-bold leading-snug text-foreground sm:text-lg">{job?.title}</h4>
         <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">
           {job?.description}
         </p>
@@ -102,10 +102,11 @@ const Job = ({ job }) => {
           {job?.salary} LPA
         </Badge>
       </div>
-      <div className="mt-5 flex flex-wrap items-center gap-3">
+      <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
         <Button
           onClick={() => navigate(`/description/${job?._id}`)}
           variant="outline"
+          className="w-full sm:w-auto"
         >
           View details
         </Button>
@@ -113,6 +114,7 @@ const Job = ({ job }) => {
           type="button"
           onClick={saveForLaterHandler}
           disabled={isSaved}
+          className="w-full sm:w-auto"
         >
           {isSaved ? "Saved" : "Save for later"}
         </Button>

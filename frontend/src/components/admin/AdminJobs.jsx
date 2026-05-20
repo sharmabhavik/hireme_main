@@ -21,20 +21,22 @@ const AdminJobs = () => {
   return (
     <div className="hire-page">
       <Navbar />
-      <div className='mx-auto max-w-6xl px-4 py-10 sm:px-6'>
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">Posted jobs</h1>
-          <p className="mt-2 text-muted-foreground">Search by title or company name, then open applicants or edit.</p>
-        </div>
-        <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
+      <div className="hire-page-content hire-page-content-medium">
+        <header className="hire-page-header">
+          <h1 className="hire-title-lg">Posted jobs</h1>
+          <p className="hire-subtitle">Search by title or company name, then open applicants or edit.</p>
+        </header>
+        <div className="hire-toolbar">
           <Input
-            className="max-w-xs border-border"
+            className="w-full max-w-full sm:max-w-xs md:max-w-sm"
             placeholder="Filter by title or company"
             onChange={(e) => setInput(e.target.value)}
           />
-          <Button onClick={() => navigate("/admin/jobs/create")}>Post a job</Button>
+          <div className="hire-toolbar-actions">
+            <Button onClick={() => navigate("/admin/jobs/create")} className="w-full sm:w-auto">Post a job</Button>
+          </div>
         </div>
-        <div className="mt-8">
+        <div className="mt-6 sm:mt-8">
           <AdminJobsTable />
         </div>
       </div>
@@ -44,4 +46,3 @@ const AdminJobs = () => {
 }
 
 export default AdminJobs
-

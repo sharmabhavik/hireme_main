@@ -34,7 +34,7 @@ const CompaniesTable = () => {
     setFilterCompany(filteredCompany);
   }, [companies, searchCompanyByText]);
   return (
-    <div>
+    <div className="hire-table-scroll">
       <Table>
         <TableCaption>A list of your recent registered companies</TableCaption>
         <TableHeader>

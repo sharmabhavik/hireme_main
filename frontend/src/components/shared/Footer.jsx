@@ -5,7 +5,7 @@ import BrandLogo from './BrandLogo';
 const Footer = () => {
   return (
     <footer className="hire-footer">
-      <div className="container mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12">
+      <div className="hire-section py-10 sm:py-12">
         <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
           <div className="max-w-sm space-y-3">
             <BrandLogo to="/" variant="light" />

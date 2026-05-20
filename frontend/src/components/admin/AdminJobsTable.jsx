@@ -55,7 +55,7 @@ const AdminJobsTable = () => {
     }
   };
   return (
-    <div>
+    <div className="hire-table-scroll">
       <Table>
         <TableCaption>A list of your recent posted jobs</TableCaption>
         <TableHeader>
