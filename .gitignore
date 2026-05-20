@@ -1,0 +1,94 @@
+# ---------------------------------------------------------------------------
+# Root .gitignore for HireMe monorepo (backend/ Node API + frontend/ Vite app)
+# ---------------------------------------------------------------------------
+
+# Dependencies
+**/node_modules/
+
+# Production / build outputs
+**/dist/
+**/dist-ssr/
+**/build/
+**/.vite/
+
+# Coverage
+**/coverage/
+
+# Logs
+**/logs/
+**/*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Environment files (keep secrets out of git)
+**/.env
+**/.env.*
+!.env.example
+!.env.template
+
+# Credentials & Secrets (should never be committed)
+backend/new_credentials.md
+**/credentials.md
+**/secrets.md
+**/API_KEYS.txt
+**/keys/
+**/certs/
+*.pem
+*.key
+*.pfx
+
+# Database files (local dev databases)
+*.db
+*.sqlite
+*.sqlite3
+*.mongo
+
+# API keys and tokens
+.apikey
+.token
+*.apikey
+*.token
+
+# Cloudinary config (if stored locally)
+**/cloudinary.config.js
+
+# Sensitive config files
+config.secret.js
+secrets.config.js
+
+# Smoke tests (dev only)
+backend/smoke-test.mjs
+
+# Local env files (even if named differently)
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Cache files
+.cache/
+*.cache
+
+# OS / editor
+.DS_Store
+Thumbs.db
+
+# VS Code (keep shared workspace recommendations)
+.vscode/*
+!.vscode/extensions.json
+
+# JetBrains
+.idea/
+
+# Windows / Visual Studio cruft
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Optional: local caches
+**/.eslintcache
+**/.cache/
