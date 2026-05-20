@@ -154,33 +154,33 @@ const JobDescription = () => {
   }, [jobId, dispatch, user?._id]);
 
   return (
-    <div className="min-h-screen bg-[oklch(0.99_0.005_165)]">
+    <div className="hire-page">
       <Navbar />
-      <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
-        <div className="rounded-2xl border border-slate-200/90 bg-white p-8 shadow-sm">
+      <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-10">
+        <div className="hire-card-padded">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
             <div>
-              <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+              <h1 className="text-2xl font-bold tracking-tight text-foreground">
                 {singleJob?.title}
               </h1>
-              <p className="mt-1 text-sm font-medium text-slate-600">
+              <p className="mt-1 text-sm font-medium text-muted-foreground">
                 {singleJob?.company?.name || ""}
               </p>
               <div className="mt-4 flex flex-wrap gap-2">
                 <Badge
-                  className="border-0 bg-emerald-50 font-semibold text-emerald-800"
+                  className="hire-badge-primary"
                   variant="secondary"
                 >
                   {singleJob?.position} positions
                 </Badge>
                 <Badge
-                  className="border-0 bg-amber-50 font-semibold text-amber-900"
+                  className="hire-badge-warm"
                   variant="secondary"
                 >
                   {singleJob?.jobType}
                 </Badge>
                 <Badge
-                  className="border-0 bg-slate-100 font-semibold text-slate-800"
+                  className="hire-badge-muted"
                   variant="secondary"
                 >
                   {singleJob?.salary} LPA
@@ -192,7 +192,8 @@ const JobDescription = () => {
                 <PopoverTrigger asChild>
                   <Button
                     disabled={isApplied}
-                    className={`shrink-0 rounded-xl px-8 ${isApplied ? "bg-slate-400 cursor-not-allowed" : "bg-emerald-600 hover:bg-emerald-700"}`}
+                    className={`shrink-0 rounded-xl px-6 sm:px-8 ${isApplied ? "opacity-60 cursor-not-allowed" : ""}`}
+                    variant={isApplied ? "secondary" : "default"}
                   >
                     {isApplied ? "Already applied" : "Apply now"}
                   </Button>
@@ -201,7 +202,7 @@ const JobDescription = () => {
                   <div className="flex flex-col gap-2">
                     <Button
                       type="button"
-                      className="w-full bg-emerald-600 hover:bg-emerald-700"
+                      className="w-full"
                       onClick={async () => {
                         setApplyMenuOpen(false);
                         await applyJobHandler();
@@ -225,7 +226,7 @@ const JobDescription = () => {
               <Button
                 type="button"
                 variant="outline"
-                className="rounded-xl border-slate-300"
+                className="rounded-xl"
                 onClick={saveForLaterHandler}
                 disabled={isSaved}
               >
@@ -233,49 +234,49 @@ const JobDescription = () => {
               </Button>
             </div>
           </div>
-          <div className="mt-10 border-t border-slate-100 pt-8">
-            <h2 className="text-lg font-semibold text-slate-900">
+          <div className="mt-10 border-t border-border pt-8">
+            <h2 className="text-lg font-semibold text-foreground">
               About this role
             </h2>
-            <dl className="mt-4 space-y-3 text-slate-700">
+            <dl className="mt-4 space-y-3 text-foreground/90">
               <div className="flex flex-col gap-1 sm:flex-row sm:gap-4">
-                <dt className="shrink-0 font-semibold text-slate-900 sm:w-48">
+                <dt className="shrink-0 font-semibold text-foreground sm:w-48">
                   Role
                 </dt>
                 <dd>{singleJob?.title}</dd>
               </div>
               <div className="flex flex-col gap-1 sm:flex-row sm:gap-4">
-                <dt className="shrink-0 font-semibold text-slate-900 sm:w-48">
+                <dt className="shrink-0 font-semibold text-foreground sm:w-48">
                   Location
                 </dt>
                 <dd>{singleJob?.location}</dd>
               </div>
               <div className="flex flex-col gap-1 sm:flex-row sm:gap-4">
-                <dt className="shrink-0 font-semibold text-slate-900 sm:w-48">
+                <dt className="shrink-0 font-semibold text-foreground sm:w-48">
                   Description
                 </dt>
                 <dd className="leading-relaxed">{singleJob?.description}</dd>
               </div>
               <div className="flex flex-col gap-1 sm:flex-row sm:gap-4">
-                <dt className="shrink-0 font-semibold text-slate-900 sm:w-48">
+                <dt className="shrink-0 font-semibold text-foreground sm:w-48">
                   Experience
                 </dt>
                 <dd>{singleJob?.experienceLevel} yrs</dd>
               </div>
               <div className="flex flex-col gap-1 sm:flex-row sm:gap-4">
-                <dt className="shrink-0 font-semibold text-slate-900 sm:w-48">
+                <dt className="shrink-0 font-semibold text-foreground sm:w-48">
                   Salary
                 </dt>
                 <dd>{singleJob?.salary} LPA</dd>
               </div>
               <div className="flex flex-col gap-1 sm:flex-row sm:gap-4">
-                <dt className="shrink-0 font-semibold text-slate-900 sm:w-48">
+                <dt className="shrink-0 font-semibold text-foreground sm:w-48">
                   Applicants
                 </dt>
                 <dd>{singleJob?.applications?.length ?? 0}</dd>
               </div>
               <div className="flex flex-col gap-1 sm:flex-row sm:gap-4">
-                <dt className="shrink-0 font-semibold text-slate-900 sm:w-48">
+                <dt className="shrink-0 font-semibold text-foreground sm:w-48">
                   Posted
                 </dt>
                 <dd>{singleJob?.createdAt?.split?.("T")?.[0]}</dd>
@@ -354,7 +355,7 @@ const JobDescription = () => {
             <DialogFooter>
               <Button
                 type="submit"
-                className="bg-emerald-600 hover:bg-emerald-700"
+                className=""
                 disabled={savingProfile}
               >
                 {savingProfile ? "Saving..." : "Save & apply"}

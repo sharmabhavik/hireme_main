@@ -23,54 +23,54 @@ const RecruiterDashboard = () => {
   const activeJobs = (allAdminJobs || []).filter((j) => !j?.isDeleted);
 
   return (
-    <div className="min-h-screen bg-[oklch(0.99_0.005_165)]">
+    <div className="hire-page">
       <Navbar />
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-        <div className="rounded-2xl border border-slate-200/90 bg-white p-8 shadow-sm">
-          <h1 className="text-2xl font-bold text-slate-900">
+        <div className="hire-card-padded">
+          <h1 className="text-2xl font-bold text-foreground">
             Recruiter dashboard
           </h1>
-          <p className="mt-2 text-sm text-slate-600">
+          <p className="mt-2 text-sm text-muted-foreground">
             Overview of your postings.
           </p>
 
           <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-              <p className="text-sm font-semibold text-slate-700">Total jobs</p>
-              <p className="mt-2 text-2xl font-bold text-slate-900">
+            <div className="hire-stat-box">
+              <p className="text-sm font-semibold text-muted-foreground">Total jobs</p>
+              <p className="mt-2 text-2xl font-bold text-foreground">
                 {allAdminJobs?.length || 0}
               </p>
             </div>
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-              <p className="text-sm font-semibold text-slate-700">
+            <div className="hire-stat-box">
+              <p className="text-sm font-semibold text-muted-foreground">
                 Active jobs
               </p>
-              <p className="mt-2 text-2xl font-bold text-slate-900">
+              <p className="mt-2 text-2xl font-bold text-foreground">
                 {activeJobs.length}
               </p>
             </div>
           </div>
 
-          <div className="mt-6 rounded-xl border border-slate-200 bg-white p-4">
-            <p className="text-sm font-semibold text-slate-900">Quick links</p>
+          <div className="mt-6 hire-stat-box">
+            <p className="text-sm font-semibold text-foreground">Quick links</p>
             <div className="mt-3 flex flex-wrap gap-3">
               <button
                 type="button"
-                className="text-sm font-medium text-emerald-700 hover:underline"
+                className="text-sm font-medium hire-link"
                 onClick={() => navigate("/admin/companies")}
               >
                 Manage companies
               </button>
               <button
                 type="button"
-                className="text-sm font-medium text-emerald-700 hover:underline"
+                className="text-sm font-medium hire-link"
                 onClick={() => navigate("/admin/jobs")}
               >
                 Manage jobs
               </button>
               <button
                 type="button"
-                className="text-sm font-medium text-emerald-700 hover:underline"
+                className="text-sm font-medium hire-link"
                 onClick={() => navigate("/admin/jobs/create")}
               >
                 Post a job
@@ -79,9 +79,9 @@ const RecruiterDashboard = () => {
           </div>
         </div>
 
-        <div className="mt-10 rounded-2xl border border-slate-200/90 bg-white p-8 shadow-sm">
-          <h2 className="text-lg font-bold text-slate-900">Posted jobs</h2>
-          <p className="mt-1 text-sm text-slate-600">
+        <div className="mt-10 hire-card-padded">
+          <h2 className="text-lg font-bold text-foreground">Posted jobs</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
             Click a job to view applicants.
           </p>
 
@@ -108,7 +108,7 @@ const RecruiterDashboard = () => {
                         navigate(`/admin/jobs/${job._id}/applicants`)
                       }
                     >
-                      <TableCell className="font-medium text-slate-900">
+                      <TableCell className="font-medium text-foreground">
                         {job?.title}
                       </TableCell>
                       <TableCell>{job?.company?.name}</TableCell>
@@ -122,7 +122,7 @@ const RecruiterDashboard = () => {
                         <Button
                           type="button"
                           variant="outline"
-                          className="border-slate-300"
+                          className="border-border"
                           onClick={() =>
                             navigate(`/admin/jobs/${job._id}/applicants`)
                           }
@@ -134,7 +134,7 @@ const RecruiterDashboard = () => {
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-slate-600">
+                    <TableCell colSpan={6} className="text-muted-foreground">
                       No jobs posted yet.
                     </TableCell>
                   </TableRow>
@@ -150,3 +150,4 @@ const RecruiterDashboard = () => {
 };
 
 export default RecruiterDashboard;
+

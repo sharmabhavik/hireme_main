@@ -106,21 +106,21 @@ const Signup = () => {
     }
   }, [user, navigate]);
   return (
-    <div className="min-h-screen hire-auth-bg">
+    <div className="hire-page hire-auth-bg">
       <Navbar />
-      <div className="mx-auto flex max-w-7xl flex-col items-center justify-center px-4 py-12 sm:px-6">
-        <div className="mb-8 text-center">
+      <div className="mx-auto flex max-w-7xl flex-1 flex-col items-center justify-center px-4 py-10 sm:px-6 sm:py-12">
+        <div className="mb-6 text-center sm:mb-8">
           <BrandLogo size="lg" />
-          <p className="mt-3 text-slate-600">
+          <p className="mt-3 text-muted-foreground">
             Create your account in a minute.
           </p>
         </div>
         <form
           onSubmit={submitHandler}
-          className="w-full max-w-md rounded-2xl border border-slate-200/90 bg-white p-8 shadow-xl shadow-slate-200/50"
+          className="hire-card w-full max-w-md p-6 shadow-lg sm:p-8"
         >
-          <h1 className="font-bold text-xl text-slate-900">Create account</h1>
-          <p className="mt-1 text-sm text-slate-500">
+          <h1 className="font-bold text-xl text-foreground">Create account</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
             Students apply to jobs; recruiters post and manage roles.
           </p>
           <div className="my-3">
@@ -169,7 +169,7 @@ const Signup = () => {
           </div>
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div className="my-4" role="radiogroup" aria-label="Account type">
-              <p className="mb-3 text-sm font-medium text-slate-700">I am a</p>
+              <p className="mb-3 text-sm font-medium text-foreground">I am a</p>
               <div className="flex flex-wrap items-center gap-6">
                 <div className="flex items-center space-x-2">
                   <Input
@@ -209,7 +209,7 @@ const Signup = () => {
           </div>
           {loading ? (
             <Button
-              className="w-full my-2 bg-emerald-600 hover:bg-emerald-700"
+              className="w-full my-2"
               type="button"
             >
               {" "}
@@ -218,16 +218,16 @@ const Signup = () => {
           ) : (
             <Button
               type="submit"
-              className="w-full my-2 bg-emerald-600 hover:bg-emerald-700"
+              className="w-full my-2"
             >
               Create account
             </Button>
           )}
-          <p className="text-sm text-center text-slate-600 mt-4">
+          <p className="text-sm text-center text-muted-foreground mt-4">
             Already have an account?{" "}
             <Link
               to="/login"
-              className="font-semibold text-emerald-700 hover:underline"
+              className="hire-link"
             >
               Log in
             </Link>

@@ -27,7 +27,7 @@ const Home = () => {
     }
   }, [user, navigate]);
   return (
-    <div className="flex min-h-screen flex-col bg-[oklch(0.99_0.005_165)]">
+    <div className="hire-page">
       <Navbar />
       <main className="flex-1">
         <HeroSection />

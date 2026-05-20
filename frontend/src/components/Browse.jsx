@@ -40,29 +40,27 @@ const Browse = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[oklch(0.99_0.005_165)]">
+    <div className="hire-page">
       <Navbar />
-      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
-        <div className="mb-10">
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">
-            Browse jobs
-          </h1>
-          <p className="mt-2 text-slate-600">
+      <div className="hire-page-content">
+        <div className="mb-8 sm:mb-10">
+          <h1 className="hire-title-lg">Browse jobs</h1>
+          <p className="hire-subtitle">
             Search by role, skill, company, or location.
           </p>
-          <div className="mt-6 flex w-full max-w-2xl items-center gap-0 overflow-hidden rounded-full border border-slate-200/90 bg-white pl-4 shadow-sm">
+          <div className="hire-search-bar mt-6 max-w-2xl">
             <input
               type="text"
               placeholder='Try "Full Stack", "Pune", "Backend"…'
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && submitSearch()}
-              className="min-w-0 flex-1 border-none bg-transparent py-3.5 text-sm text-slate-800 outline-none placeholder:text-slate-400"
+              className="hire-search-input"
             />
             <Button
               type="button"
               onClick={submitSearch}
-              className="h-12 shrink-0 rounded-none rounded-r-full bg-emerald-600 px-6 text-white hover:bg-emerald-700"
+              className="h-11 shrink-0 rounded-none rounded-r-full px-5 sm:h-12 sm:px-6"
             >
               <Search className="h-5 w-5" />
             </Button>
@@ -70,26 +68,26 @@ const Browse = () => {
         </div>
 
         {!hasCriteria ? (
-          <div className="rounded-2xl border border-dashed border-slate-200 bg-white/80 py-16 text-center text-slate-500">
-            <p className="font-medium text-slate-700">Start by searching</p>
+          <div className="hire-empty-state">
+            <p className="font-medium text-foreground">Start by searching</p>
             <p className="mt-1 text-sm">
               Enter a keyword and press Enter or click the search button.
             </p>
           </div>
         ) : allJobs.length <= 0 ? (
-          <div className="rounded-2xl border border-dashed border-slate-200 bg-white/80 py-16 text-center text-slate-500">
-            <p className="font-medium text-slate-700">No matching jobs</p>
+          <div className="hire-empty-state">
+            <p className="font-medium text-foreground">No matching jobs</p>
             <p className="mt-1 text-sm">
               Try a different keyword or adjust filters.
             </p>
           </div>
         ) : (
           <>
-            <p className="mb-6 text-slate-600">
+            <p className="mb-6 text-muted-foreground">
               {allJobs.length} {allJobs.length === 1 ? "role" : "roles"}{" "}
               matched.
             </p>
-            <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-3">
               {allJobs.map((job) => (
                 <Job key={job._id} job={job} />
               ))}

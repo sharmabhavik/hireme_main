@@ -28,7 +28,7 @@ const statusBadgeClass = (status) => {
     case "interviewing":
       return "border-0 bg-orange-400 text-orange-950 dark:bg-orange-500/30 dark:text-orange-50";
     case "selected":
-      return "border-0 bg-orange-600 text-white dark:bg-orange-400 dark:text-slate-950";
+      return "border-0 bg-orange-600 text-white dark:bg-orange-400 dark:text-background";
     case "rejected":
       return "border-0 bg-red-500 text-white dark:bg-red-500/30 dark:text-red-100";
     default:

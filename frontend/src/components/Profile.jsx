@@ -32,13 +32,13 @@ const Profile = () => {
     .join("");
 
   return (
-    <div className="min-h-screen bg-[oklch(0.99_0.005_165)]">
+    <div className="hire-page">
       <Navbar />
-      <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6">
-        <div className="rounded-2xl border border-slate-200/90 bg-white p-8 shadow-sm">
-          <div className="flex items-start justify-between gap-4">
+      <div className="mx-auto max-w-4xl px-4 py-6 sm:px-6 sm:py-8">
+        <div className="hire-card-padded">
+          <div className="flex flex-col items-start justify-between gap-4 sm:flex-row">
             <div className="flex items-center gap-4">
-              <Avatar className="h-24 w-24 ring-2 ring-emerald-100 ring-offset-2">
+              <Avatar className="h-20 w-20 ring-2 ring-primary/25 ring-offset-2 ring-offset-background sm:h-24 sm:w-24">
                 <AvatarImage
                   src={user?.profile?.profilePhoto || ""}
                   alt={user?.fullname || "Profile"}
@@ -48,35 +48,34 @@ const Profile = () => {
                 </AvatarFallback>
               </Avatar>
               <div>
-                <h1 className="font-semibold text-xl text-slate-900">
+                <h1 className="font-semibold text-xl text-foreground">
                   {user?.fullname}
                 </h1>
-                <p className="text-slate-600">{user?.profile?.bio}</p>
+                <p className="text-muted-foreground">{user?.profile?.bio}</p>
               </div>
             </div>
             <Button
               onClick={() => setOpen(true)}
               variant="outline"
-              className="shrink-0 border-slate-300"
+              className="shrink-0"
               aria-label="Edit profile"
             >
               <Pen className="size-4" />
             </Button>
           </div>
-          <div className="my-6 space-y-3 border-t border-slate-100 pt-6">
-            <div className="flex items-center gap-3 text-slate-700">
-              <Mail className="size-4 text-emerald-600" />
+          <div className="my-6 space-y-3 border-t border-border pt-6">
+            <div className="flex items-center gap-3 text-foreground/90">
+              <Mail className="size-4 text-primary" />
               <span>{user?.email}</span>
             </div>
-            <div className="flex items-center gap-3 text-slate-700">
-              <Contact className="size-4 text-emerald-600" />
+            <div className="flex items-center gap-3 text-foreground/90">
+              <Contact className="size-4 text-primary" />
               <span>{user?.phoneNumber}</span>
             </div>
             <div>
               <Button
                 type="button"
                 variant="outline"
-                className="border-slate-300"
                 onClick={() => setPasswordOpen(true)}
               >
                 Change password
@@ -84,7 +83,7 @@ const Profile = () => {
             </div>
           </div>
           <div className="my-6">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
               Skills
             </h2>
             <div className="mt-2 flex flex-wrap gap-2">
@@ -93,19 +92,19 @@ const Profile = () => {
                   <Badge
                     key={index}
                     variant="secondary"
-                    className="bg-emerald-50 text-emerald-900"
+                    className="hire-badge-primary"
                   >
                     {item}
                   </Badge>
                 ))
               ) : (
-                <span className="text-slate-500">Not added yet</span>
+                <span className="text-muted-foreground">Not added yet</span>
               )}
             </div>
           </div>
           {isStudent && (
             <div className="grid w-full max-w-sm items-center gap-1.5">
-              <Label className="text-sm font-semibold text-slate-900">
+              <Label className="text-sm font-semibold text-foreground">
                 Resume
               </Label>
               {user?.profile?.resume ? (
@@ -113,29 +112,29 @@ const Profile = () => {
                   target="_blank"
                   rel="noreferrer"
                   href={user?.profile?.resume}
-                  className="text-emerald-700 hover:underline cursor-pointer"
+                  className="hire-link cursor-pointer"
                 >
                   {user?.profile?.resumeOriginalName || "View resume"}
                 </a>
               ) : (
-                <span className="text-slate-500">Not uploaded</span>
+                <span className="text-muted-foreground">Not uploaded</span>
               )}
             </div>
           )}
         </div>
         {isStudent && (
           <>
-            <div className="mt-10">
-              <h2 className="font-bold text-lg text-slate-900">Applications</h2>
-              <p className="mt-1 text-sm text-slate-600">
+            <div className="mt-8 sm:mt-10">
+              <h2 className="font-bold text-lg text-foreground">Applications</h2>
+              <p className="mt-1 text-sm text-muted-foreground">
                 Roles you&apos;ve applied to on HireMe.
               </p>
               <AppliedJobTable />
             </div>
 
-            <div className="mt-10">
-              <h2 className="font-bold text-lg text-slate-900">Saved jobs</h2>
-              <p className="mt-1 text-sm text-slate-600">
+            <div className="mt-8 sm:mt-10">
+              <h2 className="font-bold text-lg text-foreground">Saved jobs</h2>
+              <p className="mt-1 text-sm text-muted-foreground">
                 Roles you saved for later.
               </p>
               <div className="mt-4 grid grid-cols-1 gap-4">
@@ -143,25 +142,25 @@ const Profile = () => {
                   savedJobs.map((job) => (
                     <div
                       key={job._id}
-                      className="rounded-xl border border-slate-200/90 bg-white p-4"
+                      className="hire-card p-4"
                     >
-                      <div className="flex items-start justify-between gap-4">
+                      <div className="flex flex-col items-start justify-between gap-2 sm:flex-row sm:gap-4">
                         <div>
-                          <p className="text-sm font-semibold text-slate-900">
+                          <p className="text-sm font-semibold text-foreground">
                             {job?.title}
                           </p>
-                          <p className="text-sm text-slate-600">
+                          <p className="text-sm text-muted-foreground">
                             {job?.company?.name || ""}
                           </p>
                         </div>
-                        <span className="text-xs text-slate-500">
+                        <span className="text-xs text-muted-foreground">
                           {job?.location}
                         </span>
                       </div>
                     </div>
                   ))
                 ) : (
-                  <div className="rounded-xl border border-dashed border-slate-200 bg-white p-6 text-slate-600">
+                  <div className="hire-empty-state py-8 text-sm">
                     No saved jobs yet.
                   </div>
                 )}
@@ -172,6 +171,7 @@ const Profile = () => {
       </div>
       <UpdateProfileDialog open={open} setOpen={setOpen} />
       <ChangePasswordDialog open={passwordOpen} setOpen={setPasswordOpen} />
+      <Footer />
     </div>
   );
 };

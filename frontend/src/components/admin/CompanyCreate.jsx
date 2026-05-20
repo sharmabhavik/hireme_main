@@ -34,12 +34,12 @@ const CompanyCreate = () => {
         }
     }
     return (
-        <div className="min-h-screen bg-[oklch(0.99_0.005_165)]">
+        <div className="hire-page">
             <Navbar />
             <div className='mx-auto max-w-4xl px-4 py-10 sm:px-6'>
-                <div className='rounded-2xl border border-slate-200/90 bg-white p-8 shadow-sm'>
-                    <h1 className='font-bold text-2xl text-slate-900'>Name your company</h1>
-                    <p className='mt-2 text-slate-600'>You can update branding and details on the next step.</p>
+                <div className='hire-card-padded'>
+                    <h1 className='font-bold text-2xl text-foreground'>Name your company</h1>
+                    <p className='mt-2 text-muted-foreground'>You can update branding and details on the next step.</p>
 
                     <Label className="mt-8 block">Company name</Label>
                     <Input
@@ -49,8 +49,8 @@ const CompanyCreate = () => {
                         onChange={(e) => setCompanyName(e.target.value)}
                     />
                     <div className='mt-8 flex flex-wrap items-center gap-3'>
-                        <Button variant="outline" className="border-slate-300" onClick={() => navigate("/admin/companies")}>Cancel</Button>
-                        <Button className="bg-emerald-600 hover:bg-emerald-700" onClick={registerNewCompany}>Continue</Button>
+                        <Button variant="outline" className="border-border" onClick={() => navigate("/admin/companies")}>Cancel</Button>
+                        <Button onClick={registerNewCompany}>Continue</Button>
                     </div>
                 </div>
             </div>

@@ -71,16 +71,16 @@ const Login = () => {
         }
     }, [user, navigate]);
     return (
-        <div className="min-h-screen hire-auth-bg">
+        <div className="hire-page hire-auth-bg">
             <Navbar />
-            <div className='mx-auto flex max-w-7xl flex-col items-center justify-center px-4 py-12 sm:px-6'>
-                <div className="mb-8 text-center">
+            <div className='mx-auto flex max-w-7xl flex-1 flex-col items-center justify-center px-4 py-10 sm:px-6 sm:py-12'>
+                <div className="mb-6 text-center sm:mb-8">
                     <BrandLogo size="lg" />
-                    <p className="mt-3 text-slate-600">Welcome back. Sign in to continue.</p>
+                    <p className="mt-3 text-muted-foreground">Welcome back. Sign in to continue.</p>
                 </div>
-                <form onSubmit={submitHandler} className='w-full max-w-md rounded-2xl border border-slate-200/90 bg-white p-8 shadow-xl shadow-slate-200/50'>
-                    <h1 className='font-bold text-xl text-slate-900'>Log in</h1>
-                    <p className="mt-1 text-sm text-slate-500">Use the email and role you registered with.</p>
+                <form onSubmit={submitHandler} className='hire-card w-full max-w-md p-6 shadow-lg sm:p-8'>
+                    <h1 className='font-bold text-xl text-foreground'>Log in</h1>
+                    <p className="mt-1 text-sm text-muted-foreground">Use the email and role you registered with.</p>
                     <div className='my-4'>
                         <Label>Email</Label>
                         <Input
@@ -105,7 +105,7 @@ const Login = () => {
                         />
                     </div>
                     <div className="my-6" role="radiogroup" aria-label="Account type">
-                        <p className="mb-3 text-sm font-medium text-slate-700">I am a</p>
+                        <p className="mb-3 text-sm font-medium text-foreground">I am a</p>
                         <div className="flex flex-wrap items-center gap-6">
                             <div className="flex items-center space-x-2">
                                 <Input
@@ -134,11 +134,11 @@ const Login = () => {
                         </div>
                     </div>
                     {
-                        loading ? <Button className="w-full my-2 bg-emerald-600 hover:bg-emerald-700" type="button"> <Loader2 className='mr-2 h-4 w-4 animate-spin' /> Please wait </Button> : <Button type="submit" className="w-full my-2 bg-emerald-600 hover:bg-emerald-700">Log in</Button>
+                        loading ? <Button className="w-full my-2" type="button"> <Loader2 className='mr-2 h-4 w-4 animate-spin' /> Please wait </Button> : <Button type="submit" className="w-full my-2">Log in</Button>
                     }
-                    <p className='text-sm text-center text-slate-600 mt-4'>
+                    <p className='text-sm text-center text-muted-foreground mt-4'>
                         Don&apos;t have an account?{' '}
-                        <Link to="/signup" className='font-semibold text-emerald-700 hover:underline'>Join HireMe</Link>
+                        <Link to="/signup" className='hire-link'>Join HireMe</Link>
                     </p>
                 </form>
             </div>

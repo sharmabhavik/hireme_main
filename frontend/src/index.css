@@ -49,87 +49,90 @@
 }
 
 :root {
-  /* HireMe brand accents (used with Tailwind emerald/teal in components) */
   --hire-accent: oklch(0.55 0.14 165);
   --hire-accent-soft: oklch(0.96 0.02 165);
-  /* Light mode: Pure white background */
+  --footer-bg: oklch(0.13 0 0);
+  --footer-fg: oklch(0.88 0 0);
+  --footer-muted: oklch(0.62 0 0);
+
+  /* Light: pure white page, dark readable text */
   --background: oklch(1 0 0);
-  /* Light mode: Dark text for contrast */
-  --foreground: oklch(0.15 0 0);
-  --card: oklch(0.98 0.008 200);
-  --card-foreground: oklch(0.15 0 0);
+  --foreground: oklch(0.14 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.14 0 0);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.15 0 0);
-  --primary: oklch(0.55 0.14 165);
-  --primary-foreground: oklch(0.98 0 0);
-  --secondary: oklch(0.50 0.12 160);
-  --secondary-foreground: oklch(0.98 0 0);
-  --muted: oklch(0.90 0.01 0);
-  --muted-foreground: oklch(0.45 0 0);
-  --accent: oklch(0.55 0.14 165);
-  --accent-foreground: oklch(0.98 0 0);
+  --popover-foreground: oklch(0.14 0 0);
+  --primary: oklch(0.52 0.14 165);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.48 0.11 175);
+  --secondary-foreground: oklch(0.99 0 0);
+  --muted: oklch(0.96 0.005 165);
+  --muted-foreground: oklch(0.42 0.01 165);
+  --accent: oklch(0.52 0.14 165);
+  --accent-foreground: oklch(0.99 0 0);
   --accent-bg: oklch(0.96 0.02 165);
-  --accent-border: oklch(0.55 0.14 165);
-  --destructive: oklch(0.60 0.25 27);
-  --border: oklch(0.92 0.005 200);
-  --input: oklch(0.95 0.005 200);
-  --ring: oklch(0.55 0.14 165);
+  --accent-border: oklch(0.52 0.14 165);
+  --destructive: oklch(0.55 0.22 27);
+  --border: oklch(0.9 0.008 165);
+  --input: oklch(0.94 0.006 165);
+  --ring: oklch(0.52 0.14 165);
   --chart-1: oklch(0.55 0.14 165);
   --chart-2: oklch(0.50 0.12 160);
   --chart-3: oklch(0.45 0.10 155);
   --chart-4: oklch(0.40 0.08 150);
   --chart-5: oklch(0.35 0.06 145);
   --radius: 0.625rem;
-  --sidebar: oklch(0.98 0.008 200);
-  --sidebar-foreground: oklch(0.15 0 0);
-  --sidebar-primary: oklch(0.55 0.14 165);
-  --sidebar-primary-foreground: oklch(0.98 0 0);
-  --sidebar-accent: oklch(0.55 0.14 165);
-  --sidebar-accent-foreground: oklch(0.98 0 0);
-  --sidebar-border: oklch(0.92 0.005 200);
-  --sidebar-ring: oklch(0.55 0.14 165);
+  --sidebar: oklch(0.99 0.005 165);
+  --sidebar-foreground: oklch(0.14 0 0);
+  --sidebar-primary: oklch(0.52 0.14 165);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent: oklch(0.96 0.02 165);
+  --sidebar-accent-foreground: oklch(0.14 0 0);
+  --sidebar-border: oklch(0.9 0.008 165);
+  --sidebar-ring: oklch(0.52 0.14 165);
 }
 
 .dark {
-  /* Dark mode brand (premium black + saffron/orange accents) */
-  --hire-accent: oklch(0.78 0.16 65);
-  --hire-accent-soft: oklch(0.25 0.03 65);
+  --hire-accent: oklch(0.72 0.14 165);
+  --hire-accent-soft: oklch(0.22 0.03 165);
+  --footer-bg: oklch(0.05 0 0);
+  --footer-fg: oklch(0.9 0 0);
+  --footer-muted: oklch(0.58 0 0);
 
-  /* Dark mode: Premium dark gray/charcoal background */
-  --background: oklch(0.13 0 0);
-  /* Dark mode: Light text for contrast */
-  --foreground: oklch(0.95 0 0);
-  --card: oklch(0.18 0.01 0);
-  --card-foreground: oklch(0.95 0 0);
-  --popover: oklch(0.18 0.01 0);
-  --popover-foreground: oklch(0.95 0 0);
-  --primary: oklch(0.78 0.16 65);
-  --primary-foreground: oklch(0.13 0 0);
-  --secondary: oklch(0.65 0.14 65);
-  --secondary-foreground: oklch(0.13 0 0);
-  --muted: oklch(0.30 0.01 0);
-  --muted-foreground: oklch(0.70 0 0);
-  --accent: oklch(0.78 0.16 65);
-  --accent-foreground: oklch(0.13 0 0);
-  --accent-bg: oklch(0.25 0.03 65);
-  --accent-border: oklch(0.78 0.16 65);
-  --destructive: oklch(0.70 0.19 22);
-  --border: oklch(1 0 0 / 15%);
-  --input: oklch(1 0 0 / 20%);
-  --ring: oklch(0.78 0.16 65);
-  --chart-1: oklch(0.78 0.16 65);
-  --chart-2: oklch(0.70 0.14 60);
-  --chart-3: oklch(0.60 0.12 55);
-  --chart-4: oklch(0.50 0.10 50);
-  --chart-5: oklch(0.40 0.08 45);
-  --sidebar: oklch(0.18 0.01 0);
-  --sidebar-foreground: oklch(0.95 0 0);
-  --sidebar-primary: oklch(0.78 0.16 65);
-  --sidebar-primary-foreground: oklch(0.13 0 0);
-  --sidebar-accent: oklch(0.78 0.16 65);
-  --sidebar-accent-foreground: oklch(0.13 0 0);
-  --sidebar-border: oklch(1 0 0 / 15%);
-  --sidebar-ring: oklch(0.78 0.16 65);
+  /* Dark: premium near-black, high-contrast text */
+  --background: oklch(0.08 0 0);
+  --foreground: oklch(0.94 0 0);
+  --card: oklch(0.12 0.005 165);
+  --card-foreground: oklch(0.94 0 0);
+  --popover: oklch(0.12 0.005 165);
+  --popover-foreground: oklch(0.94 0 0);
+  --primary: oklch(0.72 0.14 165);
+  --primary-foreground: oklch(0.1 0 0);
+  --secondary: oklch(0.62 0.1 175);
+  --secondary-foreground: oklch(0.1 0 0);
+  --muted: oklch(0.18 0.008 165);
+  --muted-foreground: oklch(0.68 0.02 165);
+  --accent: oklch(0.72 0.14 165);
+  --accent-foreground: oklch(0.1 0 0);
+  --accent-bg: oklch(0.2 0.03 165);
+  --accent-border: oklch(0.72 0.14 165);
+  --destructive: oklch(0.65 0.2 22);
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 14%);
+  --ring: oklch(0.72 0.14 165);
+  --chart-1: oklch(0.72 0.14 165);
+  --chart-2: oklch(0.65 0.12 170);
+  --chart-3: oklch(0.58 0.1 175);
+  --chart-4: oklch(0.50 0.08 180);
+  --chart-5: oklch(0.42 0.06 185);
+  --sidebar: oklch(0.1 0.005 165);
+  --sidebar-foreground: oklch(0.94 0 0);
+  --sidebar-primary: oklch(0.72 0.14 165);
+  --sidebar-primary-foreground: oklch(0.1 0 0);
+  --sidebar-accent: oklch(0.18 0.02 165);
+  --sidebar-accent-foreground: oklch(0.94 0 0);
+  --sidebar-border: oklch(1 0 0 / 12%);
+  --sidebar-ring: oklch(0.72 0.14 165);
 }
 
 @layer base {
@@ -137,38 +140,142 @@
     @apply border-border outline-ring/50;
   }
 
-  body {
-    @apply bg-background text-foreground antialiased;
+  html {
+    @apply font-sans scroll-smooth;
   }
 
-  html {
-    @apply font-sans;
+  body {
+    @apply min-h-screen bg-background text-foreground antialiased;
   }
 }
 
-/* Subtle page texture for marketing surfaces */
+@layer components {
+  .hire-page {
+    @apply flex min-h-screen flex-col bg-background text-foreground;
+  }
+
+  .hire-page-content {
+    @apply mx-auto w-full max-w-7xl flex-1 px-4 py-6 sm:px-6 sm:py-8 lg:py-10;
+  }
+
+  .hire-card {
+    @apply rounded-2xl border border-border bg-card text-card-foreground shadow-sm;
+  }
+
+  .hire-card-padded {
+    @apply rounded-2xl border border-border bg-card p-5 text-card-foreground shadow-sm sm:p-6 md:p-8;
+  }
+
+  .hire-title {
+    @apply text-2xl font-bold tracking-tight text-foreground sm:text-3xl;
+  }
+
+  .hire-title-lg {
+    @apply text-3xl font-bold tracking-tight text-foreground;
+  }
+
+  .hire-subtitle {
+    @apply mt-2 text-sm text-muted-foreground sm:text-base;
+  }
+
+  .hire-stat-box {
+    @apply rounded-xl border border-border bg-muted/50 p-4;
+  }
+
+  .hire-empty-state {
+    @apply rounded-2xl border border-dashed border-border bg-card/90 py-12 text-center text-muted-foreground sm:py-16;
+  }
+
+  .hire-search-bar {
+    @apply flex w-full items-center gap-0 overflow-hidden rounded-full border border-border bg-card pl-3 shadow-sm ring-1 ring-border/60 sm:pl-4;
+  }
+
+  .hire-search-input {
+    @apply min-w-0 flex-1 border-none bg-transparent py-3 text-sm text-foreground outline-none placeholder:text-muted-foreground sm:py-3.5;
+  }
+
+  .hire-gradient-text {
+    @apply bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent;
+  }
+
+  .hire-pill {
+    @apply inline-flex items-center rounded-full border border-primary/25 bg-primary/8 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-primary shadow-sm sm:px-4 sm:py-1.5;
+  }
+
+  .hire-badge-primary {
+    @apply border-0 bg-primary/12 font-semibold text-primary dark:bg-primary/20;
+  }
+
+  .hire-badge-warm {
+    @apply border-0 bg-amber-500/12 font-semibold text-amber-900 dark:bg-amber-500/18 dark:text-amber-200;
+  }
+
+  .hire-badge-muted {
+    @apply border-0 bg-muted font-semibold text-foreground;
+  }
+
+  .hire-link {
+    @apply font-semibold text-primary transition-colors hover:underline;
+  }
+
+  .hire-job-card {
+    @apply flex flex-col rounded-2xl border border-border bg-card p-5 text-card-foreground shadow-sm transition-all duration-200 hover:border-primary/35 hover:shadow-md sm:p-6;
+  }
+
+  .hire-section-band {
+    @apply border-y border-border bg-muted/30 py-10 backdrop-blur-sm sm:py-12;
+  }
+
+  .hire-footer {
+    @apply mt-auto border-t border-border text-[color:var(--footer-fg)];
+    background-color: var(--footer-bg);
+  }
+
+  .hire-footer-muted {
+    color: var(--footer-muted);
+  }
+
+  .hire-nav-link {
+    @apply text-sm font-medium text-muted-foreground transition-colors hover:text-primary;
+  }
+}
+
+/* Marketing / auth surfaces */
 .hire-hero-gradient {
   background:
-    radial-gradient(ellipse 80% 50% at 50% -20%, oklch(0.94 0.04 165 / 0.5), transparent),
-    radial-gradient(ellipse 60% 40% at 100% 0%, oklch(0.92 0.03 200 / 0.35), transparent),
+    radial-gradient(ellipse 80% 50% at 50% -20%, oklch(0.94 0.04 165 / 0.45), transparent),
+    radial-gradient(ellipse 60% 40% at 100% 0%, oklch(0.92 0.03 200 / 0.3), transparent),
     linear-gradient(to bottom, oklch(0.99 0.005 165), oklch(1 0 0));
 }
 
 .hire-auth-bg {
   background:
-    radial-gradient(ellipse 100% 80% at 50% -30%, oklch(0.88 0.06 165 / 0.4), transparent),
-    linear-gradient(160deg, oklch(0.97 0.015 165) 0%, oklch(0.99 0 0) 45%, oklch(0.96 0.02 200) 100%);
+    radial-gradient(ellipse 100% 80% at 50% -30%, oklch(0.88 0.06 165 / 0.35), transparent),
+    linear-gradient(160deg, oklch(0.98 0.01 165) 0%, oklch(1 0 0) 50%, oklch(0.97 0.015 200) 100%);
 }
 
 .dark .hire-auth-bg {
   background:
-    radial-gradient(ellipse 110% 80% at 50% -35%, oklch(0.35 0.06 65 / 0.35), transparent),
-    linear-gradient(160deg, oklch(0.13 0 0) 0%, oklch(0.16 0 0) 55%, oklch(0.18 0 0) 100%);
+    radial-gradient(ellipse 110% 80% at 50% -35%, oklch(0.35 0.06 165 / 0.28), transparent),
+    linear-gradient(160deg, oklch(0.08 0 0) 0%, oklch(0.1 0 0) 55%, oklch(0.12 0.005 165) 100%);
 }
 
 .dark .hire-hero-gradient {
   background:
-    radial-gradient(ellipse 80% 50% at 50% -20%, oklch(0.35 0.06 65 / 0.35), transparent),
-    radial-gradient(ellipse 60% 40% at 100% 0%, oklch(0.25 0.02 250 / 0.25), transparent),
-    linear-gradient(to bottom, oklch(0.13 0 0), oklch(0.16 0 0));
+    radial-gradient(ellipse 80% 50% at 50% -20%, oklch(0.28 0.05 165 / 0.35), transparent),
+    radial-gradient(ellipse 60% 40% at 100% 0%, oklch(0.2 0.02 250 / 0.2), transparent),
+    linear-gradient(to bottom, oklch(0.08 0 0), oklch(0.1 0 0));
+}
+
+/* Jobs list scroll area — responsive height */
+.hire-jobs-scroll {
+  @apply flex-1 pb-6 md:pb-8;
+  max-height: none;
+}
+
+@media (min-width: 1024px) {
+  .hire-jobs-scroll {
+    max-height: 88vh;
+    overflow-y: auto;
+  }
 }

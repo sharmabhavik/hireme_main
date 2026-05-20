@@ -6,20 +6,20 @@ const LatestJobs = () => {
     const {allJobs} = useSelector(store=>store.job);
 
     return (
-        <section className='mx-auto max-w-7xl px-4 py-16 sm:px-6'>
-            <div className="mb-10 text-center sm:text-left">
-                <h2 className='text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl'>
-                    Fresh <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">picks</span> for you
+        <section className='mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16'>
+            <div className="mb-8 text-center sm:mb-10 sm:text-left">
+                <h2 className='text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:text-4xl'>
+                    Fresh <span className="hire-gradient-text">picks</span> for you
                 </h2>
-                <p className="mt-2 max-w-2xl text-slate-600">
+                <p className="mt-2 max-w-2xl text-muted-foreground">
                     Recently posted roles from teams that are hiring now. Tap a card to see the full description.
                 </p>
             </div>
-            <div className='grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3'>
+            <div className='grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-3'>
                 {
                     allJobs.length <= 0 ? (
-                        <div className="col-span-full rounded-2xl border border-dashed border-slate-200 bg-white/80 py-16 text-center text-slate-500">
-                            <p className="font-medium text-slate-700">No openings yet</p>
+                        <div className="hire-empty-state col-span-full">
+                            <p className="font-medium text-foreground">No openings yet</p>
                             <p className="mt-1 text-sm">Check back soon—or ask a recruiter to post a role on HireMe.</p>
                         </div>
                     ) : allJobs?.slice(0,6).map((job) => <LatestJobCards key={job._id} job={job}/>)

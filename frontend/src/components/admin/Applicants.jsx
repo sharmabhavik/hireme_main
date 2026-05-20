@@ -33,20 +33,23 @@ const Applicants = () => {
     return () => clearInterval(id);
   }, [params.id, dispatch]);
   return (
-    <div className="min-h-screen bg-[oklch(0.99_0.005_165)]">
+    <div className="hire-page">
       <Navbar />
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">
           {applicants?.applications?.length ?? 0} applicants
         </h1>
-        <p className="mt-1 text-slate-600">
+        <p className="mt-1 text-muted-foreground">
           Review candidates who applied to this role.
         </p>
         <div className="mt-8">
           <ApplicantsTable />
         </div>
-      </div>      <Footer />    </div>
+      </div>
+      <Footer />
+    </div>
   );
 };
 
 export default Applicants;
+

@@ -83,25 +83,25 @@ const CompanySetup = () => {
   }, [singleCompany]);
 
   return (
-    <div className="min-h-screen bg-[oklch(0.99_0.005_165)]">
+    <div className="hire-page">
       <Navbar />
       <div className="mx-auto max-w-xl px-4 py-10 sm:px-6">
         <form
           onSubmit={submitHandler}
-          className="rounded-2xl border border-slate-200/90 bg-white p-8 shadow-sm"
+          className="hire-card-padded"
         >
           <div className="mb-8 flex flex-wrap items-center gap-4">
             <Button
               type="button"
               onClick={() => navigate("/admin/companies")}
               variant="outline"
-              className="flex items-center gap-2 border-slate-300"
+              className="flex items-center gap-2 border-border"
               aria-label="Back to companies"
             >
               <ArrowLeft className="size-4" />
               <span>Back</span>
             </Button>
-            <h1 className="font-bold text-xl text-slate-900">
+            <h1 className="font-bold text-xl text-foreground">
               Company profile
             </h1>
           </div>
@@ -152,14 +152,14 @@ const CompanySetup = () => {
             </div>
           </div>
           {loading ? (
-            <Button className="mt-6 w-full bg-emerald-600 hover:bg-emerald-700">
+            <Button className="mt-6 w-full">
               {" "}
               <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please wait{" "}
             </Button>
           ) : (
             <Button
               type="submit"
-              className="mt-6 w-full bg-emerald-600 hover:bg-emerald-700"
+              className="mt-6 w-full"
             >
               Save changes
             </Button>
@@ -172,3 +172,4 @@ const CompanySetup = () => {
 };
 
 export default CompanySetup;
+

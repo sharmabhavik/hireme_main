@@ -221,10 +221,10 @@ export default function MockInterview() {
   };
 
   return (
-    <div>
+    <div className="hire-page">
       <Navbar />
-      <div className="max-w-3xl mx-auto p-4 space-y-4">
-        <h1 className="text-2xl font-semibold">AI Mock Interview (Voice)</h1>
+      <div className="hire-page-content mx-auto max-w-3xl space-y-4">
+        <h1 className="hire-title text-2xl sm:text-3xl">AI Mock Interview (Voice)</h1>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div className="md:col-span-2">
@@ -321,14 +321,14 @@ export default function MockInterview() {
         {error ? <div className="text-sm text-red-600">{error}</div> : null}
 
         {question ? (
-          <div className="border rounded-lg p-3 space-y-2">
+          <div className="hire-card space-y-2 p-3 sm:p-4">
             <div className="text-sm text-muted-foreground">Question</div>
             <div className="text-base">{question}</div>
           </div>
         ) : null}
 
         {question ? (
-          <div className="border rounded-lg p-3 space-y-3">
+          <div className="hire-card space-y-3 p-3 sm:p-4">
             <div className="flex items-center justify-between">
               <div className="text-sm text-muted-foreground">Your Answer</div>
               <div className="flex gap-2">
@@ -391,7 +391,7 @@ export default function MockInterview() {
         ) : null}
 
         {lastFeedback ? (
-          <div className="border rounded-lg p-3 space-y-1">
+          <div className="hire-card space-y-1 p-3 sm:p-4">
             <div className="flex items-center justify-between">
               <div className="text-sm text-muted-foreground">Feedback</div>
               {typeof lastScore === "number" ? (

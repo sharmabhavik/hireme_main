@@ -114,12 +114,12 @@ export default function InterviewAnalysisDashboard() {
   const session = data?.session || {};
 
   return (
-    <div>
+    <div className="hire-page">
       <Navbar />
-      <div className="max-w-6xl mx-auto p-4 space-y-4">
-        <div className="flex items-start justify-between gap-3 flex-wrap">
+      <div className="hire-page-content mx-auto max-w-6xl space-y-4">
+        <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:flex-wrap">
           <div>
-            <h1 className="text-2xl font-semibold">
+            <h1 className="hire-title text-2xl sm:text-3xl">
               Interview Analysis Dashboard
             </h1>
             <div className="text-sm text-muted-foreground">
@@ -143,7 +143,7 @@ export default function InterviewAnalysisDashboard() {
         {data ? (
           <>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-              <div className="border rounded-lg p-4">
+              <div className="hire-card p-4">
                 <div className="text-xs text-muted-foreground">
                   Total Questions
                 </div>
@@ -151,7 +151,7 @@ export default function InterviewAnalysisDashboard() {
                   {safeNum(summary.totalQuestions)}
                 </div>
               </div>
-              <div className="border rounded-lg p-4">
+              <div className="hire-card p-4">
                 <div className="text-xs text-muted-foreground">
                   Average Score
                 </div>
@@ -161,7 +161,7 @@ export default function InterviewAnalysisDashboard() {
                     : "—"}
                 </div>
               </div>
-              <div className="border rounded-lg p-4">
+              <div className="hire-card p-4">
                 <div className="text-xs text-muted-foreground">Best Score</div>
                 <div className="text-2xl font-semibold">
                   {typeof summary.bestScore === "number"
@@ -169,7 +169,7 @@ export default function InterviewAnalysisDashboard() {
                     : "—"}
                 </div>
               </div>
-              <div className="border rounded-lg p-4">
+              <div className="hire-card p-4">
                 <div className="text-xs text-muted-foreground">Worst Score</div>
                 <div className="text-2xl font-semibold">
                   {typeof summary.worstScore === "number"
@@ -180,7 +180,7 @@ export default function InterviewAnalysisDashboard() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-              <div className="border rounded-lg p-4">
+              <div className="hire-card p-4">
                 <div className="font-medium">Performance Distribution</div>
                 <div className="text-xs text-muted-foreground">
                   Outstanding vs Average vs Under Average
@@ -211,7 +211,7 @@ export default function InterviewAnalysisDashboard() {
                 </div>
               </div>
 
-              <div className="border rounded-lg p-4">
+              <div className="hire-card p-4">
                 <div className="font-medium">Bucket Counts</div>
                 <div className="text-xs text-muted-foreground">
                   How many questions fall in each bucket
@@ -238,7 +238,7 @@ export default function InterviewAnalysisDashboard() {
                 </div>
               </div>
 
-              <div className="border rounded-lg p-4 lg:col-span-2">
+              <div className="hire-card p-4 lg:col-span-2">
                 <div className="font-medium">Score Per Question</div>
                 <div className="text-xs text-muted-foreground">
                   Quickly spot where you performed best/worst
@@ -265,7 +265,7 @@ export default function InterviewAnalysisDashboard() {
                 </div>
               </div>
 
-              <div className="border rounded-lg p-4 lg:col-span-2">
+              <div className="hire-card p-4 lg:col-span-2">
                 <div className="font-medium">Score Trend</div>
                 <div className="text-xs text-muted-foreground">
                   See if you improved as the interview progressed
@@ -291,7 +291,7 @@ export default function InterviewAnalysisDashboard() {
             </div>
 
             {session.overallFeedback ? (
-              <div className="border rounded-lg p-4">
+              <div className="hire-card p-4">
                 <div className="font-medium">Overall Feedback</div>
                 <div className="text-sm whitespace-pre-wrap mt-2">
                   {session.overallFeedback}

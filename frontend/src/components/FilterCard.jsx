@@ -36,12 +36,12 @@ const FilterCard = () => {
   }, [selectedLocation, selectedIndustry, selectedSalary, dispatch]);
 
   return (
-    <div className="w-full rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm">
-      <h2 className="font-bold text-lg text-slate-900">Refine results</h2>
-      <p className="mt-1 text-xs text-slate-500">
+    <div className="hire-card w-full p-4 sm:p-5">
+      <h2 className="font-bold text-lg text-foreground">Refine results</h2>
+      <p className="mt-1 text-xs text-muted-foreground">
         Narrow listings by one option at a time.
       </p>
-      <hr className="my-4 border-slate-100" />
+      <hr className="my-4 border-border" />
       {fitlerData.map((data, index) => {
         const currentValue =
           data.fitlerType === "Location"
@@ -58,7 +58,7 @@ const FilterCard = () => {
 
         return (
           <div key={data.fitlerType} className="mb-6 last:mb-0">
-            <h3 className="font-semibold text-sm uppercase tracking-wide text-slate-500">
+            <h3 className="font-semibold text-sm uppercase tracking-wide text-muted-foreground">
               {data.fitlerType}
             </h3>
             <RadioGroup value={currentValue} onValueChange={onChange}>
@@ -72,7 +72,7 @@ const FilterCard = () => {
                     <RadioGroupItem value={item} id={itemId} />
                     <Label
                       htmlFor={itemId}
-                      className="cursor-pointer text-sm font-normal text-slate-700"
+                      className="cursor-pointer text-sm font-normal text-foreground"
                     >
                       {item}
                     </Label>

@@ -22,11 +22,11 @@ const CategoryCarousel = () => {
     }
 
     return (
-        <section className="border-y border-slate-100 bg-white/60 py-12 backdrop-blur-sm">
+        <section className="hire-section-band">
             <div className="mx-auto max-w-7xl px-4 sm:px-6">
-                <div className="mb-8 text-center">
-                    <h2 className="text-2xl font-bold text-slate-900">Browse by role</h2>
-                    <p className="mt-1 text-slate-600">Jump into a category—results open on the browse page.</p>
+                <div className="mb-6 text-center sm:mb-8">
+                    <h2 className="text-xl font-bold text-foreground sm:text-2xl">Browse by role</h2>
+                    <p className="mt-1 text-sm text-muted-foreground sm:text-base">Jump into a category—results open on the browse page.</p>
                 </div>
                 <Carousel className="w-full max-w-3xl mx-auto">
                     <CarouselContent className="-ml-2 md:-ml-4">
@@ -36,7 +36,7 @@ const CategoryCarousel = () => {
                                     <Button
                                         onClick={()=>searchJobHandler(cat)}
                                         variant="outline"
-                                        className="w-full rounded-full border-emerald-200/80 bg-white font-medium text-slate-700 shadow-sm transition-all hover:border-emerald-400 hover:bg-emerald-50 hover:text-emerald-900"
+                                        className="w-full rounded-full border-border bg-card font-medium text-foreground shadow-sm transition-all hover:border-primary/40 hover:bg-primary/8 hover:text-primary"
                                     >
                                         {cat}
                                     </Button>
@@ -44,8 +44,8 @@ const CategoryCarousel = () => {
                             ))
                         }
                     </CarouselContent>
-                    <CarouselPrevious className="border-slate-200" />
-                    <CarouselNext className="border-slate-200" />
+                    <CarouselPrevious className="border-border" />
+                    <CarouselNext className="border-border" />
                 </Carousel>
             </div>
         </section>

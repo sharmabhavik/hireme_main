@@ -12,28 +12,26 @@ const Jobs = () => {
   const { allJobs } = useSelector((store) => store.job);
 
   return (
-    <div className="min-h-screen bg-[oklch(0.99_0.005_165)]">
+    <div className="hire-page">
       <Navbar />
-      <div className="mx-auto max-w-7xl px-4 pt-8 sm:px-6">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">
-            All jobs
-          </h1>
-          <p className="mt-2 text-slate-600">
+      <div className="hire-page-content">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="hire-title-lg">All jobs</h1>
+          <p className="hire-subtitle">
             Explore openings and use the sidebar to filter by keyword.
           </p>
         </div>
-        <div className="flex flex-col gap-8 lg:flex-row">
-          <aside className="w-full shrink-0 lg:w-72">
+        <div className="flex flex-col gap-6 lg:flex-row lg:gap-8">
+          <aside className="w-full shrink-0 lg:sticky lg:top-20 lg:w-72 lg:self-start">
             <FilterCard />
           </aside>
           {allJobs.length <= 0 ? (
-            <div className="flex flex-1 items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-white/80 py-20 text-slate-500">
+            <div className="hire-empty-state flex flex-1 items-center justify-center py-16 sm:py-20">
               No jobs match right now. Try another filter or check back later.
             </div>
           ) : (
-            <div className="flex-1 h-[88vh] overflow-y-auto pb-8">
-              <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+            <div className="hire-jobs-scroll min-h-0 flex-1">
+              <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2 xl:grid-cols-3">
                 {allJobs.map((job) => (
                   <motion.div
                     initial={{ opacity: 0, x: 100 }}

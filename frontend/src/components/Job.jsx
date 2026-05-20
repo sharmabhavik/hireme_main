@@ -50,16 +50,16 @@ const Job = ({ job }) => {
   };
 
   return (
-    <div className="flex flex-col rounded-2xl border border-slate-200/90 bg-white p-6 shadow-sm transition-all duration-200 hover:border-emerald-200 hover:shadow-md">
+    <div className="hire-job-card">
       <div className="flex items-center justify-between">
-        <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
           {daysAgoFunction(job?.createdAt) === 0
             ? "Posted today"
             : `${daysAgoFunction(job?.createdAt)} days ago`}
         </p>
         <Button
           variant="outline"
-          className="rounded-full border-slate-200"
+          className="rounded-full"
           size="icon"
           type="button"
         >
@@ -69,7 +69,7 @@ const Job = ({ job }) => {
 
       <div className="mt-3 flex items-center gap-3">
         <Button
-          className="h-14 w-14 shrink-0 rounded-xl border border-slate-200 p-0"
+          className="h-14 w-14 shrink-0 rounded-xl p-0"
           variant="outline"
           size="icon"
         >
@@ -78,36 +78,27 @@ const Job = ({ job }) => {
           </Avatar>
         </Button>
         <div className="min-w-0">
-          <h3 className="truncate font-semibold text-slate-900">
+          <h3 className="truncate font-semibold text-foreground">
             {job?.company?.name}
           </h3>
-          <p className="text-sm text-slate-500">{job?.location || "India"}</p>
+          <p className="text-sm text-muted-foreground">{job?.location || "India"}</p>
         </div>
       </div>
 
       <div className="mt-4 flex-1">
-        <h4 className="text-lg font-bold text-slate-900">{job?.title}</h4>
-        <p className="mt-2 line-clamp-3 text-sm text-slate-600">
+        <h4 className="text-lg font-bold text-foreground">{job?.title}</h4>
+        <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">
           {job?.description}
         </p>
       </div>
       <div className="mt-4 flex flex-wrap gap-2">
-        <Badge
-          className="border-0 bg-emerald-50 font-semibold text-emerald-800"
-          variant="secondary"
-        >
+        <Badge className="hire-badge-primary" variant="secondary">
           {job?.position} open
         </Badge>
-        <Badge
-          className="border-0 bg-amber-50 font-semibold text-amber-900"
-          variant="secondary"
-        >
+        <Badge className="hire-badge-warm" variant="secondary">
           {job?.jobType}
         </Badge>
-        <Badge
-          className="border-0 bg-slate-100 font-semibold text-slate-800"
-          variant="secondary"
-        >
+        <Badge className="hire-badge-muted" variant="secondary">
           {job?.salary} LPA
         </Badge>
       </div>
@@ -115,12 +106,10 @@ const Job = ({ job }) => {
         <Button
           onClick={() => navigate(`/description/${job?._id}`)}
           variant="outline"
-          className="border-slate-300"
         >
           View details
         </Button>
         <Button
-          className="bg-emerald-600 hover:bg-emerald-700"
           type="button"
           onClick={saveForLaterHandler}
           disabled={isSaved}

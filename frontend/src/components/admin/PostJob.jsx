@@ -61,10 +61,10 @@ const PostJob = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[oklch(0.99_0.005_165)]">
+        <div className="hire-page">
             <Navbar />
             <div className='mx-auto flex max-w-4xl justify-center px-4 py-10 sm:px-6'>
-                <form onSubmit = {submitHandler} className='w-full rounded-2xl border border-slate-200/90 bg-white p-8 shadow-lg'>
+                <form onSubmit = {submitHandler} className='w-full hire-card-padded'>
                     <div className='grid grid-cols-2 gap-2'>
                         <div>
                             <Label>Title</Label>
@@ -169,7 +169,7 @@ const PostJob = () => {
                         }
                     </div> 
                     {
-                        loading ? <Button className="w-full my-4 bg-emerald-600 hover:bg-emerald-700"> <Loader2 className='mr-2 h-4 w-4 animate-spin' /> Please wait </Button> : <Button type="submit" className="w-full my-4 bg-emerald-600 hover:bg-emerald-700">Publish job</Button>
+                        loading ? <Button className="w-full my-4"> <Loader2 className='mr-2 h-4 w-4 animate-spin' /> Please wait </Button> : <Button type="submit" className="w-full my-4">Publish job</Button>
                     }
                     {
                         companies.length === 0 && <p className='text-xs text-red-600 font-bold text-center my-3'>*Please register a company first, before posting a jobs</p>
