@@ -194,7 +194,7 @@ export const getAdminJobs = async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({
-      message: "Failed to fetch jobs."
+      message: "Failed to fetch jobs.",
       success: false,
     });
   }
