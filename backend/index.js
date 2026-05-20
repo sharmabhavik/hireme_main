@@ -21,6 +21,7 @@ const app = express();
 // Fix for __dirname in ES6 modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const projectRoot = path.dirname(__dirname); // Go up one level to project root
 
 // middleware
 app.use(express.json());
@@ -77,11 +78,11 @@ app.use("/api/v1/application", applicationRoute);
 app.use("/api/v1/interview", interviewRoute);
 
 // Serve static files from frontend/dist
-app.use(express.static(path.join(__dirname, "/frontend/dist")));
+app.use(express.static(path.join(projectRoot, "frontend/dist")));
 
 // Catch-all route for client-side routing (SPA)
 app.use((_, res) => {
-  res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+  res.sendFile(path.resolve(projectRoot, "frontend/dist/index.html"));
 });
 
 // Connect to DB first, then start server
