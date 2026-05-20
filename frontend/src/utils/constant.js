@@ -1,5 +1,8 @@
+// Use environment variable if provided (for development)
+// In production on same domain, empty string will use relative URLs (same origin)
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
+  import.meta.env.VITE_API_BASE_URL || 
+  (import.meta.env.DEV ? "http://localhost:3000" : "");
 
 export const USER_API_END_POINT = `${API_BASE_URL}/api/v1/user`;
 export const JOB_API_END_POINT = `${API_BASE_URL}/api/v1/job`;

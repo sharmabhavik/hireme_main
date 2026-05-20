@@ -35,6 +35,7 @@ const allowedOrigins = new Set(
       .map((s) => s.trim())
       .filter(Boolean)
     : [
+      "https://hireme-main.onrender.com",
       "http://localhost:5173",
       "http://localhost:5174",
       "http://localhost:5175",
