@@ -363,8 +363,8 @@ const JobDescription = () => {
           </form>
         </DialogContent>
       </Dialog>
+      <Footer />
     </div>
-    <Footer />
   );
 };
 

@@ -176,9 +176,9 @@ const PostJob = () => {
                     }
                 </form>
             </div>
+            <Footer />
         </div>
-        <Footer />
-    </div>
+    );
 }
 
 export default PostJob
