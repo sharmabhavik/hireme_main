@@ -1,5 +1,6 @@
 import React from "react";
 import Navbar from "./shared/Navbar";
+import Footer from "./shared/Footer";
 import AppliedJobTable from "./AppliedJobTable";
 import { useSelector } from "react-redux";
 import useGetAppliedJobs from "@/hooks/useGetAppliedJobs";
@@ -121,6 +122,7 @@ const StudentDashboard = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

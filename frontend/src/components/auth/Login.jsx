@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from '../shared/Navbar'
+import Footer from '../shared/Footer'
 import BrandLogo from '../shared/BrandLogo'
 import { Label } from '../ui/label'
 import { Input } from '../ui/input'
@@ -141,6 +142,7 @@ const Login = () => {
                     </p>
                 </form>
             </div>
+            <Footer />
         </div>
     )
 }

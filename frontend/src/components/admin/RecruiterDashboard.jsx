@@ -1,5 +1,6 @@
 import React from "react";
 import Navbar from "../shared/Navbar";
+import Footer from "../shared/Footer";
 import { useSelector } from "react-redux";
 import useGetAllAdminJobs from "@/hooks/useGetAllAdminJobs";
 import { useNavigate } from "react-router-dom";
@@ -143,6 +144,7 @@ const RecruiterDashboard = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../shared/Navbar";
+import Footer from "../shared/Footer";
 import { Button } from "../ui/button";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { Label } from "../ui/label";
@@ -165,6 +166,7 @@ const CompanySetup = () => {
           )}
         </form>
       </div>
+      <Footer />
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from '../shared/Navbar'
+import Footer from '../shared/Footer'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { useNavigate } from 'react-router-dom'
@@ -37,6 +38,7 @@ const AdminJobs = () => {
           <AdminJobsTable />
         </div>
       </div>
+      <Footer />
     </div>
   )
 }

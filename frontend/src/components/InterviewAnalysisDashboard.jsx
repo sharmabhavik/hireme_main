@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "./shared/Navbar";
+import Footer from "./shared/Footer";
 import { Button } from "./ui/button";
 import { INTERVIEW_API_END_POINT } from "../utils/constant";
 import {
@@ -300,6 +301,7 @@ export default function InterviewAnalysisDashboard() {
           </>
         ) : null}
       </div>
+      <Footer />
     </div>
   );
 }

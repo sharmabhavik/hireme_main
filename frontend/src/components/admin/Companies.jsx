@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from '../shared/Navbar'
+import Footer from '../shared/Footer'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import CompaniesTable from './CompaniesTable'
@@ -37,6 +38,7 @@ const Companies = () => {
                     <CompaniesTable/>
                 </div>
             </div>
+            <Footer />
         </div>
     )
 }

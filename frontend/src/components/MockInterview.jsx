@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./shared/Navbar";
+import Footer from "./shared/Footer";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { INTERVIEW_API_END_POINT } from "../utils/constant";
@@ -431,6 +432,7 @@ export default function MockInterview() {
           Tip: Use Chrome/Edge for best voice support.
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
